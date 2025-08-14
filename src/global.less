@@ -1,0 +1,70 @@
+/* Custom yellow header background */
+@import url(./inter.less);
+
+/* CSS Custom Properties for gradient colors */
+:root {
+  --home-page-top-color: #e0f2fe;
+  --home-page-bottom-color: #bae6fd;
+}
+
+/* Dark mode gradient colors */
+:root.dark {
+  --home-page-top-color: #36435e;
+  --home-page-bottom-color: #36435e;
+}
+
+/* Force gradient background on all possible containers */
+html, body, #root, .ant-app {
+  background: linear-gradient(to bottom, var(--home-page-top-color), var(--home-page-bottom-color)) !important;
+}
+
+/* Override any theme-applied backgrounds */
+.ant-layout {
+  background: linear-gradient(to bottom, var(--home-page-top-color), var(--home-page-bottom-color)) !important;
+}
+
+.ant-layout-content {
+  background: transparent !important;
+}
+
+/* Ensure the body stays with gradient */
+body {
+  font-family: Inter;
+  margin: 0;
+  height: 100%;
+  background: linear-gradient(to bottom, var(--home-page-top-color), var(--home-page-bottom-color)) !important;
+  background-attachment: fixed !important;
+}
+
+#root {
+  height: 100%;
+  background: linear-gradient(to bottom, var(--home-page-top-color), var(--home-page-bottom-color)) !important;
+}
+
+.ant-app {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(to bottom, var(--home-page-top-color), var(--home-page-bottom-color)) !important;
+}
+
+/* Scroll bar stylings */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: rgb(219, 218, 218);
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #aaaaaa;
+  border-radius: 5px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}
