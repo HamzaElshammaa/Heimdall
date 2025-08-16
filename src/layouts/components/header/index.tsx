@@ -64,6 +64,7 @@ const RagHeader = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
         height: '72px',
+  boxShadow: '0 0 .8rem rgba(0, 0, 0, .3)',
       }}
     >
       <a href={window.location.origin}>
