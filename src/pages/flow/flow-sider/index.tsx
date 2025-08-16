@@ -29,6 +29,7 @@ const FlowSide = ({ setCollapsed, collapsed }: IProps) => {
 
   return (
     <Sider
+      className={styles.flowSider}
       collapsible
       collapsed={collapsed}
       collapsedWidth={0}

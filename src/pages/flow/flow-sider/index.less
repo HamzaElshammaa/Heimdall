@@ -32,3 +32,30 @@
   overflow: auto;
   height: calc(100vh - 80px);
 }
+
+/* Dark mode: match header/navigation bar color */
+:global(html.dark) {
+  .flowSider {
+    background-color: #171c42 !important;
+  }
+
+  .operatorCard {
+    background-color: #171c42 !important;
+    color: #fff;
+    box-shadow: none !important;
+    border: none !important;
+
+    :global(.ant-card-body) {
+      background: transparent;
+    }
+
+    /* On hover in dark mode, use the same hover style as light mode */
+    &:hover {
+      box-shadow: none !important;
+      background-color: #202649 !important;
+      border-right: 0.2rem solid #8cc3f8 !important;
+      color: #8cc3f8;
+      padding-right: 0.2rem;
+    }
+  }
+}
