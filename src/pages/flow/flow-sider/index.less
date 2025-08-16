@@ -1,7 +1,25 @@
 .operatorCard {
+  /* Make it look like a simple box */
+  background-color: #fff !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  color: #000;
+
+  /* Remove default hover shadow from AntD hoverable card */
+  &:hover {
+    box-shadow: none !important;
+    background-color: #c1dcfd !important;
+    border-right: 0.2rem solid #006aed !important;
+    color: #171c43;
+    padding-right: 0.2rem;
+  }
+
   :global(.ant-card-body) {
     padding: 10px;
+    background: transparent;
   }
+
   .cubeIcon {
     &:hover {
       cursor: pointer;
