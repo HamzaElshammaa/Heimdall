@@ -77,7 +77,7 @@ const RagHeader = () => {
         </Space>
       </a>
       <Space size={[0, 8]} wrap>
-        <Radio.Group
+        {/* <Radio.Group
           defaultValue="a"
           buttonStyle="solid"
           className={
@@ -107,9 +107,13 @@ const RagHeader = () => {
               </a>
             </Radio.Button>
           ))}
-        </Radio.Group>
+        </Radio.Group> */}
       </Space>
-      <Toolbar></Toolbar>
+      <Toolbar
+        navItems={tagsData}
+        onNavigate={(p: string) => navigate(p)}
+        currentPathName={currentPath}
+      ></Toolbar>
     </Header>
   );
 };

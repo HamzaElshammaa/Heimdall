@@ -1,18 +1,26 @@
-import { useTranslate } from '@/hooks/common-hooks';
-import { DownOutlined, GithubOutlined } from '@ant-design/icons';
+import { MenuOutlined } from '@ant-design/icons';
 import { Dropdown, MenuProps, Space } from 'antd';
-import camelCase from 'lodash/camelCase';
 import React, { useCallback, useMemo } from 'react';
 import User from '../user';
 
 import { useTheme } from '@/components/theme-provider';
-import { LanguageList, LanguageMap } from '@/constants/common';
-import { useChangeLanguage } from '@/hooks/logic-hooks';
-import { useFetchUserInfo, useListTenant } from '@/hooks/user-setting-hooks';
+import { useListTenant } from '@/hooks/user-setting-hooks';
 import { TenantRole } from '@/pages/user-setting/constants';
-import { BellRing, CircleHelp, MoonIcon, SunIcon } from 'lucide-react';
+import { BellRing, MoonIcon, SunIcon } from 'lucide-react';
 import { useNavigate } from 'umi';
 import styled from './index.less';
+
+type NavItem = {
+  path: string;
+  name: string;
+  icon: React.ElementType;
+};
+
+interface RightToolBarProps {
+  navItems?: NavItem[];
+  onNavigate?: (path: string) => void;
+  currentPathName?: string;
+}
 
 const Circle = ({ children, ...restProps }: React.PropsWithChildren) => {
   return (
@@ -30,19 +38,13 @@ const handleDocHelpCLick = () => {
   window.open('https://ragflow.io/docs/dev/category/guides', 'target');
 };
 
-const RightToolBar = () => {
-  const { t } = useTranslate('common');
-  const changeLanguage = useChangeLanguage();
+const RightToolBar: React.FC<RightToolBarProps> = ({
+  navItems = [],
+  onNavigate,
+  currentPathName,
+}) => {
   const { setTheme, theme } = useTheme();
   const navigate = useNavigate();
-
-  const {
-    data: { language = 'English' },
-  } = useFetchUserInfo();
-
-  const handleItemClick: MenuProps['onClick'] = ({ key }) => {
-    changeLanguage(key);
-  };
 
   const { data } = useListTenant();
 
@@ -50,12 +52,23 @@ const RightToolBar = () => {
     return data.some((x) => x.role === TenantRole.Invite);
   }, [data]);
 
-  const items: MenuProps['items'] = LanguageList.map((x) => ({
-    key: x,
-    label: <span>{LanguageMap[x as keyof typeof LanguageMap]}</span>,
-  })).reduce<MenuProps['items']>((pre, cur) => {
-    return [...pre!, { type: 'divider' }, cur];
-  }, []);
+  const navMenuItems: MenuProps['items'] = (navItems || []).map((item) => ({
+    key: item.path,
+    label: (
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {/* icon */}
+        <item.icon />
+        <span>{item.name}</span>
+      </div>
+    ),
+  }));
+
+  const onDropdownClick = useCallback<NonNullable<MenuProps['onClick']>>(
+    ({ key }) => {
+      onNavigate?.(String(key));
+    },
+    [onNavigate],
+  );
 
   const onMoonClick = React.useCallback(() => {
     setTheme('light');
@@ -71,18 +84,6 @@ const RightToolBar = () => {
   return (
     <div className={styled.toolbarWrapper}>
       <Space wrap size={16}>
-{/*         <Dropdown menu={{ items, onClick: handleItemClick }} placement="bottom">
-          <Space className={styled.language}>
-            <b>{t(camelCase(language))}</b>
-            <DownOutlined />
-          </Space>
-        </Dropdown> */}
-{/*         <Circle>
-          <GithubOutlined onClick={handleGithubCLick} />
-        </Circle> */}
-{/*         <Circle>
-          <CircleHelp className="size-4" onClick={handleDocHelpCLick} />
-        </Circle> */}
         <Circle>
           {theme === 'dark' ? (
             <MoonIcon onClick={onMoonClick} size={20} />
@@ -98,7 +99,15 @@ const RightToolBar = () => {
             </div>
           </Circle>
         )}
-        <User></User>
+        <Dropdown
+          menu={{ items: navMenuItems, onClick: onDropdownClick }}
+          placement="bottomRight"
+        >
+          <Circle aria-label="Open navigation menu">
+            <MenuOutlined />
+          </Circle>
+        </Dropdown>
+        <User />
       </Space>
     </div>
   );
