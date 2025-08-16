@@ -3,14 +3,16 @@
 
 /* CSS Custom Properties for gradient colors */
 :root {
-  --home-page-top-color: #e0f2fe;
-  --home-page-bottom-color: #bae6fd;
+  /* Light theme: use solid color by making gradient endpoints equal */
+  --home-page-top-color: #f2f5fc;
+  --home-page-bottom-color: #f2f5fc;
 }
 
 /* Dark mode gradient colors */
 :root.dark {
-  --home-page-top-color: #36435e;
-  --home-page-bottom-color: #36435e;
+  /* Dark theme: use solid color by making gradient endpoints equal */
+  --home-page-top-color: #29334a;
+  --home-page-bottom-color: #29334a;
 }
 
 /* Force gradient background on all possible containers */
