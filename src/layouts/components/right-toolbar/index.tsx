@@ -103,6 +103,7 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
             </div>
           </Circle>
         )}
+        <User />
         <Dropdown
           menu={{ items: navMenuItems, onClick: onDropdownClick }}
           placement="bottomRight"
@@ -111,7 +112,7 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
             <MenuOutlined />
           </Circle>
         </Dropdown>
-        <User />
+        
       </Space>
     </div>
   );
