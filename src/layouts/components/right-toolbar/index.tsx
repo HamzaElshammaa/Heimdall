@@ -52,16 +52,20 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
     return data.some((x) => x.role === TenantRole.Invite);
   }, [data]);
 
-  const navMenuItems: MenuProps['items'] = (navItems || []).map((item) => ({
-    key: item.path,
-    label: (
-      <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-        {/* icon */}
-        <item.icon />
-        <span>{item.name}</span>
-      </div>
-    ),
-  }));
+  const navMenuItems: MenuProps['items'] = (navItems || []).map((item) => {
+    const IconComp = item.icon;
+    return {
+      key: item.path,
+      label: (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span className={styled.menuIcon}>
+            {IconComp ? <IconComp className={styled.iconSvg} /> : null}
+          </span>
+          <span>{item.name}</span>
+        </div>
+      ),
+    };
+  });
 
   const onDropdownClick = useCallback<NonNullable<MenuProps['onClick']>>(
     ({ key }) => {
