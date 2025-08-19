@@ -87,7 +87,7 @@ export const useFetchAgentTemplates = () => {
         });
 
         // Filter out specific templates by title (case-insensitive)
-        const forbidden = new Set(
+        const forbiddenExact = new Set(
           [
             'HR recruitment pitch assistant',
             'SEO Blog generator',
@@ -96,10 +96,18 @@ export const useFetchAgentTemplates = () => {
           ].map((s) => s.toLowerCase()),
         );
 
-        return data.data.filter(
-          (x: IFlowTemplate) =>
-            !forbidden.has(String(x?.title ?? '').trim().toLowerCase()),
-        );
+        const shouldRemove = (title?: string) => {
+          const t = String(title ?? '').trim().toLowerCase();
+          if (forbiddenExact.has(t)) return true;
+          // Fuzzy includes to catch minor variations/casing
+          if (t.includes('seo') && t.includes('blog')) return true;
+          if (t.includes('medical') && (t.includes('consult') || t.includes('doctor'))) return true;
+          if (t.includes('investment') && (t.includes('advisor') || t.includes('adviser'))) return true;
+          if (t.includes('hr') && (t.includes('recruit') || t.includes('recruitment'))) return true;
+          return false;
+        };
+
+        return data.data.filter((x: IFlowTemplate) => !shouldRemove(x?.title));
       }
 
       return data?.data ?? [];
