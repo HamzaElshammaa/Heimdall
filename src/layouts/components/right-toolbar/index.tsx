@@ -69,7 +69,12 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
 
   const onDropdownClick = useCallback<NonNullable<MenuProps['onClick']>>(
     ({ key }) => {
-      onNavigate?.(String(key));
+      const url = String(key);
+      if (/^https?:\/\//i.test(url)) {
+        window.open(url, '_blank');
+        return;
+      }
+      onNavigate?.(url);
     },
     [onNavigate],
   );

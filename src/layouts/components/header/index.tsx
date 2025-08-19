@@ -9,6 +9,7 @@ import { Flex, Layout, Radio, Space, theme } from 'antd';
 import { MouseEventHandler, useCallback, useMemo } from 'react';
 import { useLocation } from 'umi';
 import Toolbar from '../right-toolbar';
+import { Box } from 'lucide-react';
 
 import { useTheme } from '@/components/theme-provider';
 import styles from './index.less';
@@ -30,7 +31,9 @@ const RagHeader = () => {
       { path: '/chat', name: t('chat'), icon: MessageOutlined },
       { path: '/search', name: t('search'), icon: SearchOutlined },
       { path: '/flow', name: t('flow'), icon: GraphIcon },
-      { path: '/file', name: t('fileManager'), icon: FileIcon },
+  { path: '/file', name: t('fileManager'), icon: FileIcon },
+  // External link item: cube flow
+  { path: 'http://localhost:9090', name: 'cube flow', icon: Box },
     ],
     [t],
   );
