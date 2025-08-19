@@ -78,15 +78,31 @@ export const useFetchAgentTemplates = () => {
     queryFn: async () => {
       const { data } = await flowService.listTemplates();
       if (Array.isArray(data?.data)) {
+        // Insert a blank template at the top
         data.data.unshift({
           id: uuid(),
           title: t('flow.blank'),
           description: t('flow.createFromNothing'),
           dsl: EmptyDsl,
         });
+
+        // Filter out specific templates by title (case-insensitive)
+        const forbidden = new Set(
+          [
+            'HR recruitment pitch assistant',
+            'SEO Blog generator',
+            'medical consultation',
+            'intelligent investment advisor',
+          ].map((s) => s.toLowerCase()),
+        );
+
+        return data.data.filter(
+          (x: IFlowTemplate) =>
+            !forbidden.has(String(x?.title ?? '').trim().toLowerCase()),
+        );
       }
 
-      return data.data;
+      return data?.data ?? [];
     },
   });
 

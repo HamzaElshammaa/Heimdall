@@ -66,6 +66,20 @@ export const useFetchFlowTemplates = (): ResponseType<IFlowTemplate[]> => {
           description: t('flow.createFromNothing'),
           dsl: EmptyDsl,
         });
+
+        const forbidden = new Set(
+          [
+            'HR recruitment pitch assistant',
+            'SEO Blog generator',
+            'medical consultation',
+            'intelligent investment advisor',
+          ].map((s) => s.toLowerCase()),
+        );
+
+        data.data = data.data.filter(
+          (x: IFlowTemplate) =>
+            !forbidden.has(String(x?.title ?? '').trim().toLowerCase()),
+        );
       }
 
       return data;
