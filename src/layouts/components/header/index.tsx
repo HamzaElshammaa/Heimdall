@@ -63,7 +63,7 @@ const RagHeader = () => {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: '72px',
+        height: '60px',
   boxShadow: '0 0 .8rem rgba(0, 0, 0, .3)',
       }}
     >
@@ -73,8 +73,8 @@ const RagHeader = () => {
           onClick={handleLogoClick}
           className={styles.logoWrapper}
         >
-          <img src={require('@/assets/heimdal.png')} alt="" className={styles.appIcon} />
-          <span className={styles.appName}>{appConf.appName}</span>
+          <img src={require('@/assets/heimdal2.png')} alt="" className={styles.appIcon} />
+          {/* <span className={styles.appName}>{appConf.appName}</span> */}
         </Space>
       </a>
       <Space size={[0, 8]} wrap>

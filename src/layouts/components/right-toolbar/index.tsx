@@ -30,14 +30,14 @@ const Circle = ({ children, ...restProps }: React.PropsWithChildren) => {
   );
 };
 
-const handleGithubCLick = () => {
+/* const handleGithubCLick = () => {
   window.open('https://github.com/infiniflow/ragflow', 'target');
 };
 
 const handleDocHelpCLick = () => {
   window.open('https://ragflow.io/docs/dev/category/guides', 'target');
 };
-
+ */
 const RightToolBar: React.FC<RightToolBarProps> = ({
   navItems = [],
   onNavigate,
