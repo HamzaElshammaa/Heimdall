@@ -95,9 +95,9 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
       <Space wrap size={16}>
         <Circle>
           {theme === 'dark' ? (
-            <MoonIcon onClick={onMoonClick} size={20} />
+            <MoonIcon onClick={onMoonClick} size={20} color="#fff" />
           ) : (
-            <SunIcon onClick={onSunClick} size={20} />
+            <SunIcon onClick={onSunClick} size={20} color="#fff" />
           )}
         </Circle>
         {showBell && (
@@ -109,12 +109,12 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
           </Circle>
         )}
         <User />
-        <Dropdown
+    <Dropdown
           menu={{ items: navMenuItems, onClick: onDropdownClick }}
           placement="bottomRight"
         >
           <Circle aria-label="Open navigation menu">
-            <MenuOutlined />
+      <MenuOutlined style={{ color: '#fff' }} />
           </Circle>
         </Dropdown>
         
