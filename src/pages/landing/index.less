@@ -45,14 +45,16 @@
 }
 
 .portalContents {
+  margin: 0rem 0rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   gap: 12px;
-  padding: 20px 12px;
-  position: absolute;
-  inset: 0;
+  width: 100%;
+  height: 100%;
+  font-size: 1.2rem;
+  color: var(--regular-text-color, var(--regular-text-small, #000000));
 }
 
 .icon {
@@ -63,26 +65,31 @@
 
 .iconWrap {
   display: inline-flex;
-  width: 48px;
-  height: 48px;
   align-items: center;
   justify-content: center;
 }
 .iconSvg {
-  width: 28px;
-  height: 28px;
+  width: 5rem;
+  height: 5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.iconSvg :global(svg) {
+  width: 5rem;
+  height: 5rem;
 }
 
+/* normalized SVGs no longer need scaling */
+
 .label {
-  font-size: 14px;
-  color: var(--ant-color-text, #1f2937);
+  font-size: inherit;
+  color: inherit;
 }
 
 :global(html.dark) {
-  .title,
-  .label {
-    color: #fff;
-  }
+  .title { color: #fff; }
+  .portalSelector .portalContents { color: #fff; }
   .portalCard,
   .portalSelector {
     background: #171c42;
