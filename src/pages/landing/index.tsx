@@ -1,5 +1,4 @@
 import React from 'react';
-import { Card, Row, Col } from 'antd';
 import { useFetchUserInfo } from '@/hooks/user-setting-hooks';
 import styles from './index.less';
 import { history } from 'umi';
@@ -27,30 +26,36 @@ const LandingPage: React.FC = () => {
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Welcome {username} what do you want to do today ?</h1>
-      <Row gutter={[24, 24]}>
+      <div className={styles.tilesContainer}>
         {items.map((item: PortalItem) => {
           const IconComp = item.icon as React.ElementType | undefined;
           return (
-            <Col key={item.path} xs={12} sm={8} md={6} lg={6} xl={4}>
-              <Card
-                className={styles.portalCard}
-                hoverable
-                onClick={() => onClick(item)}
-                bodyStyle={{ padding: 0 }}
-              >
-                <div className={styles.portalContents}>
-                  {IconComp ? (
-                    <span className={styles.iconWrap} aria-hidden>
-                      <IconComp className={styles.iconSvg} />
-                    </span>
-                  ) : null}
-                  <span className={styles.label}>{item.name}</span>
-                </div>
-              </Card>
-            </Col>
+            <div
+              key={item.path}
+              className={`${styles.portalSelector} portal-selector`}
+              role="button"
+              tabIndex={0}
+              aria-label={item.name}
+              onClick={() => onClick(item)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  onClick(item);
+                }
+              }}
+            >
+              <div className={styles.portalContents}>
+                {IconComp ? (
+                  <span className={styles.iconWrap} aria-hidden>
+                    <IconComp className={styles.iconSvg} />
+                  </span>
+                ) : null}
+                <span className={styles.label}>{item.name}</span>
+              </div>
+            </div>
           );
         })}
-      </Row>
+      </div>
     </div>
   );
 };

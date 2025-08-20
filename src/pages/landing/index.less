@@ -9,6 +9,31 @@
   color: var(--ant-color-text, #1f2937);
 }
 
+.tilesContainer {
+  padding: 0 5%;
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
+  justify-content: center;
+}
+
+/* variables for box colors */
+:root {
+  --portal-selector-color: #ffffff;
+  --portal-selector-border-color: #DDE7F5;
+}
+
+.portalSelector {
+  position: relative;
+  height: 12rem;
+  width: 12rem;
+  margin: 0 1rem 2rem;
+  background-color: var(--portal-selector-color);
+  border-radius: .6rem;
+  border: var(--portal-selector-border-color) .1rem solid;
+  cursor: pointer;
+}
+
 .portalCard {
   border-radius: 8px;
   cursor: pointer;
@@ -58,13 +83,15 @@
   .label {
     color: #fff;
   }
-  .portalCard {
+  .portalCard,
+  .portalSelector {
     background: #171c42;
     border-color: rgba(255,255,255,0.12);
   }
 }
 
-.portalCard:hover {
+.portalCard:hover,
+.portalSelector:hover {
   border-color: #006aed;
   box-shadow: 0 0 .8rem rgba(0,0,0,.2);
 }
