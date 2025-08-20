@@ -1,0 +1,70 @@
+.container {
+  padding: 24px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 24px;
+  color: var(--ant-color-text, #1f2937);
+}
+
+.portalCard {
+  border-radius: 8px;
+  cursor: pointer;
+  height: 0;
+  padding-bottom: 100%;
+  position: relative;
+  background: #fff;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.portalContents {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 20px 12px;
+  position: absolute;
+  inset: 0;
+}
+
+.icon {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+}
+
+.iconWrap {
+  display: inline-flex;
+  width: 48px;
+  height: 48px;
+  align-items: center;
+  justify-content: center;
+}
+.iconSvg {
+  width: 28px;
+  height: 28px;
+}
+
+.label {
+  font-size: 14px;
+  color: var(--ant-color-text, #1f2937);
+}
+
+:global(html.dark) {
+  .title,
+  .label {
+    color: #fff;
+  }
+  .portalCard {
+    background: #171c42;
+    border-color: rgba(255,255,255,0.12);
+  }
+}
+
+.portalCard:hover {
+  border-color: #006aed;
+  box-shadow: 0 0 .8rem rgba(0,0,0,.2);
+}

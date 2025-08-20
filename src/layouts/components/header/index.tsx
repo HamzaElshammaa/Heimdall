@@ -1,15 +1,11 @@
-import { ReactComponent as FileIcon } from '@/assets/svg/file-management.svg';
-import { ReactComponent as GraphIcon } from '@/assets/svg/graph.svg';
-import { ReactComponent as KnowledgeBaseIcon } from '@/assets/svg/knowledge-base.svg';
+import { getNavItems } from './nav-items';
 import { useTranslate } from '@/hooks/common-hooks';
 import { useFetchAppConf } from '@/hooks/logic-hooks';
 import { useNavigateWithFromState } from '@/hooks/route-hook';
-import { MessageOutlined, SearchOutlined } from '@ant-design/icons';
 import { Flex, Layout, Radio, Space, theme } from 'antd';
 import { MouseEventHandler, useCallback, useMemo } from 'react';
-import { useLocation } from 'umi';
+import { Link, useLocation } from 'umi';
 import Toolbar from '../right-toolbar';
-import { Box } from 'lucide-react';
 
 import { useTheme } from '@/components/theme-provider';
 import styles from './index.less';
@@ -25,18 +21,7 @@ const RagHeader = () => {
   const { t } = useTranslate('header');
   const appConf = useFetchAppConf();
   const { theme: themeRag } = useTheme();
-  const tagsData = useMemo(
-    () => [
-      { path: '/knowledge', name: t('knowledgeBase'), icon: KnowledgeBaseIcon },
-      { path: '/chat', name: t('chat'), icon: MessageOutlined },
-      { path: '/search', name: t('search'), icon: SearchOutlined },
-      { path: '/flow', name: t('flow'), icon: GraphIcon },
-  { path: '/file', name: t('fileManager'), icon: FileIcon },
-  // External link item: cube flow
-  { path: 'http://localhost:9090', name: 'cube flow', icon: Box },
-    ],
-    [t],
-  );
+  const tagsData = useMemo(() => getNavItems(t), [t]);
 
   const currentPath = useMemo(() => {
     return (
@@ -53,9 +38,7 @@ const RagHeader = () => {
     [navigate],
   );
 
-  const handleLogoClick = useCallback(() => {
-    navigate('/');
-  }, [navigate]);
+  // Use Link for client-side navigation to avoid full page reloads
 
   return (
     <Header
@@ -70,16 +53,12 @@ const RagHeader = () => {
   boxShadow: '0 0 .8rem rgba(0, 0, 0, .3)',
       }}
     >
-      <a href={window.location.origin}>
-        <Space
-          size={12}
-          onClick={handleLogoClick}
-          className={styles.logoWrapper}
-        >
+      <Link to="/">
+        <Space size={12} className={styles.logoWrapper}>
           <img src={require('@/assets/heimdal2.png')} alt="" className={styles.appIcon} />
           {/* <span className={styles.appName}>{appConf.appName}</span> */}
         </Space>
-      </a>
+      </Link>
       <Space size={[0, 8]} wrap>
         {/* <Radio.Group
           defaultValue="a"

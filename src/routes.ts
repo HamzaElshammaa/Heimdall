@@ -45,7 +45,11 @@ const routes = [
     layout: false,
     wrappers: ['@/wrappers/auth'],
     routes: [
-      { path: '/', redirect: '/knowledge' },
+      { path: '/', redirect: '/landing' },
+      {
+        path: '/landing',
+        component: '@/pages/landing',
+      },
       {
         path: '/knowledge',
         component: '@/pages/knowledge',
