@@ -5,6 +5,9 @@ import User from '../user';
 
 import { useTheme } from '@/components/theme-provider';
 import { useListTenant } from '@/hooks/user-setting-hooks';
+import { LanguageList, LanguageMap, ThemeEnum } from '@/constants/common';
+import { useChangeLanguage } from '@/hooks/logic-hooks';
+import { useFetchUserInfo, useListTenant } from '@/hooks/user-setting-hooks';
 import { TenantRole } from '@/pages/user-setting/constants';
 import { BellRing, MoonIcon, SunIcon } from 'lucide-react';
 import { useNavigate } from 'umi';
@@ -80,10 +83,10 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
   );
 
   const onMoonClick = React.useCallback(() => {
-    setTheme('light');
+    setTheme(ThemeEnum.Light);
   }, [setTheme]);
   const onSunClick = React.useCallback(() => {
-    setTheme('dark');
+    setTheme(ThemeEnum.Dark);
   }, [setTheme]);
 
   const handleBellClick = useCallback(() => {

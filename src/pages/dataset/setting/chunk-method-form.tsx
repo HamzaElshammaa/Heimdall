@@ -1,12 +1,9 @@
 import { Button } from '@/components/ui/button';
-import { Loader2Icon } from 'lucide-react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import { useTranslation } from 'react-i18next';
 
 import { DocumentParserType } from '@/constants/knowledge';
-import { useUpdateKnowledge } from '@/hooks/knowledge-hooks';
 import { useMemo } from 'react';
-import { useParams } from 'umi';
 import { AudioConfiguration } from './configuration/audio';
 import { BookConfiguration } from './configuration/book';
 import { EmailConfiguration } from './configuration/email';
@@ -22,6 +19,7 @@ import { QAConfiguration } from './configuration/qa';
 import { ResumeConfiguration } from './configuration/resume';
 import { TableConfiguration } from './configuration/table';
 import { TagConfiguration } from './configuration/tag';
+import { SavingButton } from './saving-button';
 
 const ConfigurationComponentMap = {
   [DocumentParserType.Naive]: NaiveConfiguration,
@@ -48,11 +46,6 @@ function EmptyComponent() {
 export function ChunkMethodForm() {
   const form = useFormContext();
   const { t } = useTranslation();
-  // const [submitLoading, setSubmitLoading] = useState(false); // submit button loading
-  const { id: kb_id } = useParams();
-
-  const { saveKnowledgeConfiguration, loading: submitLoading } =
-    useUpdateKnowledge();
 
   const finalParserId: DocumentParserType = useWatch({
     control: form.control,
@@ -66,41 +59,22 @@ export function ChunkMethodForm() {
   }, [finalParserId]);
 
   return (
-    <>
-      <section className="overflow-auto max-h-[76vh]">
+    <section className="h-full flex flex-col">
+      <div className="overflow-auto flex-1 min-h-0">
         <ConfigurationComponent></ConfigurationComponent>
-      </section>
-      <div className="text-right pt-4">
+      </div>
+      <div className="text-right pt-4 flex justify-end gap-3">
         <Button
-          disabled={submitLoading}
+          type="reset"
+          className="bg-transparent text-color-white hover:bg-transparent border-gray-500 border-[1px]"
           onClick={() => {
-            (async () => {
-              try {
-                let beValid = await form.formControl.trigger();
-                console.log('user chunk form: ', form);
-
-                if (beValid) {
-                  // setSubmitLoading(true);
-                  let postData = form.formState.values;
-                  delete postData['avatar']; // has submitted in first form general
-
-                  saveKnowledgeConfiguration({
-                    ...postData,
-                    kb_id,
-                  });
-                }
-              } catch (e) {
-                console.log(e);
-              } finally {
-                // setSubmitLoading(false);
-              }
-            })();
+            form.reset();
           }}
         >
-          {submitLoading && <Loader2Icon className="animate-spin" />}
-          {t('common.submit')}
+          {t('knowledgeConfiguration.cancel')}
         </Button>
+        <SavingButton></SavingButton>
       </div>
-    </>
+    </section>
   );
 }
