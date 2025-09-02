@@ -1,8 +1,18 @@
-import { PropsWithChildren } from 'react';
+import { ArrowLeft } from 'lucide-react';
+import { PropsWithChildren, ReactNode } from 'react';
+import { Button } from './ui/button';
 
-export function PageHeader({ children }: PropsWithChildren) {
+interface IPageHeaderProps extends PropsWithChildren {
+  back(): void;
+  title: ReactNode;
+}
+
+export function PageHeader({ back, title, children }: IPageHeaderProps) {
   return (
-  <header className="flex justify-between items-center border-b pr-9" style={{ background: '#171c42 !important' }}>
+    <header
+      className="flex justify-between items-center border-b pr-9 text-white"
+      style={{ backgroundColor: '#171c42' }}
+    >
       <div className="flex items-center ">
         <div className="flex items-center border-r p-1.5">
           <Button variant="ghost" size="icon" onClick={back}>

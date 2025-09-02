@@ -82,15 +82,15 @@ const routes = [
     path: '/knowledge',
     component: '@/pages/knowledge',
   },
-  {
-    path: '/knowledge',
-    component: '@/pages/add-knowledge',
-    routes: [
-      { path: '/', redirect: '/landing' },
+  { path: '/', redirect: '/landing' },
       {
         path: '/landing',
         component: '@/pages/landing',
       },
+  {
+    path: '/knowledge',
+    component: '@/pages/add-knowledge',
+    routes: [
       {
         path: 'dataset',
         component: '@/pages/add-knowledge/components/knowledge-dataset',

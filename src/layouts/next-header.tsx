@@ -106,7 +106,10 @@ export function Header() {
   }, [navigate]);
 
   return (
-    <section className="p-5 pr-14 flex justify-between items-center" style={{ backgroundColor: '#dc2626' }}>
+    <section
+      className="p-5 pr-14 flex justify-between items-center text-white"
+      style={{ backgroundColor: '#171c42' }}
+    >
       <div className="flex items-center gap-4">
         <img
           src={'/logo.svg'}
@@ -115,7 +118,7 @@ export function Header() {
           onClick={handleLogoClick}
         />
         <a
-          className="flex items-center gap-1.5 text-text-secondary"
+          className="flex items-center gap-1.5 text-white/80"
           target="_blank"
           href="https://github.com/infiniflow/ragflow"
           rel="noreferrer"
@@ -129,7 +132,7 @@ export function Header() {
         value={pathname}
         onChange={handleChange}
       ></Segmented>
-      <div className="flex items-center gap-5 text-text-badge">
+  <div className="flex items-center gap-5 text-white">
         <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="flex items-center gap-1">
