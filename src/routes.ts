@@ -78,6 +78,7 @@ const routes = [
     layout: false,
     redirect: '/knowledge',
   },
+  /* Legacy (custom) UI routes disabled
   {
     path: '/knowledge',
     component: '@/pages/knowledge',
@@ -149,138 +150,138 @@ const routes = [
     component: '@/pages/document-viewer',
     layout: false,
   },
+  */
   {
     path: '/*',
     component: '@/pages/404',
     layout: false,
   },
-  // NEW UI (Next) disabled
-  // {
-  //   path: Routes.Root,
-  //   layout: false,
-  //   component: '@/layouts/next',
-  //   wrappers: ['@/wrappers/auth'],
-  //   routes: [
-  //     {
-  //       path: Routes.Root,
-  //       component: `@/pages${Routes.Home}`,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: Routes.Datasets,
-  //   layout: false,
-  //   component: '@/layouts/next',
-  //   routes: [
-  //     {
-  //       path: Routes.Datasets,
-  //       component: `@/pages${Routes.Datasets}`,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: Routes.Chats,
-  //   layout: false,
-  //   component: '@/layouts/next',
-  //   routes: [
-  //     {
-  //       path: Routes.Chats,
-  //       component: `@/pages${Routes.Chats}`,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: Routes.Chat + '/:id',
-  //   layout: false,
-  //   component: `@/pages${Routes.Chats}/chat`,
-  // },
-  // {
-  //   path: Routes.Searches,
-  //   layout: false,
-  //   component: '@/layouts/next',
-  //   routes: [
-  //     {
-  //       path: Routes.Searches,
-  //       component: `@/pages${Routes.Searches}`,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: `${Routes.Search}/:id`,
-  //   layout: false,
-  //   component: `@/pages${Routes.Search}`,
-  // },
-  // {
-  //   path: `${Routes.SearchShare}`,
-  //   layout: false,
-  //   component: `@/pages${Routes.SearchShare}`,
-  // },
-  // {
-  //   path: Routes.Agents,
-  //   layout: false,
-  //   component: '@/layouts/next',
-  //   routes: [
-  //     {
-  //       path: Routes.Agents,
-  //       component: `@/pages${Routes.Agents}`,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: `${Routes.AgentLogPage}/:id`,
-  //   layout: false,
-  //   component: `@/pages${Routes.Agents}${Routes.AgentLogPage}`,
-  // },
-  // {
-  //   path: `${Routes.Agent}/:id`,
-  //   layout: false,
-  //   component: `@/pages${Routes.Agent}`,
-  // },
-  // {
-  //   path: Routes.AgentTemplates,
-  //   layout: false,
-  //   component: `@/pages${Routes.Agents}${Routes.AgentTemplates}`,
-  // },
-  // {
-  //   path: Routes.Files,
-  //   layout: false,
-  //   component: '@/layouts/next',
-  //   routes: [
-  //     {
-  //       path: Routes.Files,
-  //       component: `@/pages${Routes.Files}`,
-  //     },
-  //   ],
-  // },
-  // {
-  //   path: Routes.DatasetBase,
-  //   layout: false,
-  //   component: '@/layouts/next',
-  //   routes: [{ path: Routes.DatasetBase, redirect: Routes.Dataset }],
-  // },
-  // {
-  //   path: Routes.DatasetBase,
-  //   layout: false,
-  //   component: `@/pages${Routes.DatasetBase}`,
-  //   routes: [
-  //     {
-  //       path: `${Routes.Dataset}/:id`,
-  //       component: `@/pages${Routes.Dataset}`,
-  //     },
-  //     {
-  //       path: `${Routes.DatasetBase}${Routes.DatasetSetting}/:id`,
-  //       component: `@/pages${Routes.DatasetBase}${Routes.DatasetSetting}`,
-  //     },
-  //     {
-  //       path: `${Routes.DatasetBase}${Routes.DatasetTesting}/:id`,
-  //       component: `@/pages${Routes.DatasetBase}${Routes.DatasetTesting}`,
-  //     },
-  //     {
-  //       path: `${Routes.DatasetBase}${Routes.KnowledgeGraph}/:id`,
-  //       component: `@/pages${Routes.DatasetBase}${Routes.KnowledgeGraph}`,
-  //     },
-  //   ],
-  // },
+  {
+    path: Routes.Root,
+    layout: false,
+    component: '@/layouts/next',
+    wrappers: ['@/wrappers/auth'],
+    routes: [
+      {
+        path: Routes.Root,
+        component: `@/pages${Routes.Home}`,
+      },
+    ],
+  },
+  {
+    path: Routes.Datasets,
+    layout: false,
+    component: '@/layouts/next',
+    routes: [
+      {
+        path: Routes.Datasets,
+        component: `@/pages${Routes.Datasets}`,
+      },
+    ],
+  },
+  {
+    path: Routes.Chats,
+    layout: false,
+    component: '@/layouts/next',
+    routes: [
+      {
+        path: Routes.Chats,
+        component: `@/pages${Routes.Chats}`,
+      },
+    ],
+  },
+  {
+    path: Routes.Chat + '/:id',
+    layout: false,
+    component: `@/pages${Routes.Chats}/chat`,
+  },
+  {
+    path: Routes.Searches,
+    layout: false,
+    component: '@/layouts/next',
+    routes: [
+      {
+        path: Routes.Searches,
+        component: `@/pages${Routes.Searches}`,
+      },
+    ],
+  },
+  {
+    path: `${Routes.Search}/:id`,
+    layout: false,
+    component: `@/pages${Routes.Search}`,
+  },
+  {
+    path: `${Routes.SearchShare}`,
+    layout: false,
+    component: `@/pages${Routes.SearchShare}`,
+  },
+  {
+    path: Routes.Agents,
+    layout: false,
+    component: '@/layouts/next',
+    routes: [
+      {
+        path: Routes.Agents,
+        component: `@/pages${Routes.Agents}`,
+      },
+    ],
+  },
+  {
+    path: `${Routes.AgentLogPage}/:id`,
+    layout: false,
+    component: `@/pages${Routes.Agents}${Routes.AgentLogPage}`,
+  },
+  {
+    path: `${Routes.Agent}/:id`,
+    layout: false,
+    component: `@/pages${Routes.Agent}`,
+  },
+  {
+    path: Routes.AgentTemplates,
+    layout: false,
+    component: `@/pages${Routes.Agents}${Routes.AgentTemplates}`,
+  },
+  {
+    path: Routes.Files,
+    layout: false,
+    component: '@/layouts/next',
+    routes: [
+      {
+        path: Routes.Files,
+        component: `@/pages${Routes.Files}`,
+      },
+    ],
+  },
+  {
+    path: Routes.DatasetBase,
+    layout: false,
+    component: '@/layouts/next',
+    routes: [{ path: Routes.DatasetBase, redirect: Routes.Dataset }],
+  },
+  {
+    path: Routes.DatasetBase,
+    layout: false,
+    component: `@/pages${Routes.DatasetBase}`,
+    routes: [
+      {
+        path: `${Routes.Dataset}/:id`,
+        component: `@/pages${Routes.Dataset}`,
+      },
+      {
+        path: `${Routes.DatasetBase}${Routes.DatasetSetting}/:id`,
+        component: `@/pages${Routes.DatasetBase}${Routes.DatasetSetting}`,
+      },
+      {
+        path: `${Routes.DatasetBase}${Routes.DatasetTesting}/:id`,
+        component: `@/pages${Routes.DatasetBase}${Routes.DatasetTesting}`,
+      },
+      {
+        path: `${Routes.DatasetBase}${Routes.KnowledgeGraph}/:id`,
+        component: `@/pages${Routes.DatasetBase}${Routes.KnowledgeGraph}`,
+      },
+    ],
+  },
   {
     path: `${Routes.ParsedResult}/chunks`,
     layout: false,
