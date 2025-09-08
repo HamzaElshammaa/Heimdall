@@ -74,15 +74,25 @@ export function Header() {
 
   return (
     <section
-      className="p-5 pr-14 flex justify-between items-center text-white"
-      style={{ backgroundColor: '#171c42' }}
+      className="flex justify-between items-center text-white"
+      style={{
+        boxSizing: 'content-box',
+        display: 'flex',
+        zIndex: 102,
+        height: '3.5rem',
+        backgroundColor: '#171c43',
+        fontSize: '1rem',
+        position: 'fixed',
+        width: '100%',
+        boxShadow: '0 0 .8rem rgba(0, 0, 0, .3)',
+      }}
     >
       <div className="flex items-center gap-4">
         <img
           src={require('@/assets/heimdal2.png')}
           alt="Heimdal logo"
           className="mr-[12] cursor-pointer"
-          style={{ height: 40, width: 'auto', objectFit: 'contain' }}
+          style={{ height: '1.8rem', width: 'auto', objectFit: 'contain' }}
           onClick={handleLogoClick}
         />
   {/* GitHub link removed per user request */}
