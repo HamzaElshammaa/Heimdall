@@ -82,7 +82,6 @@ export function Header() {
         height: '3.5rem',
         backgroundColor: '#171c43',
         fontSize: '1rem',
-        position: 'fixed',
         width: '100%',
         boxShadow: '0 0 .8rem rgba(0, 0, 0, .3)',
       }}
