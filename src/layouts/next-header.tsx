@@ -56,7 +56,7 @@ export function Header() {
 
   const tagsData = useMemo(
     () => [
-      { path: Routes.Root, name: t('header.Root'), icon: House },
+  { path: Routes.Root, name: 'Home', icon: House },
       { path: Routes.Datasets, name: t('header.dataset'), icon: Library },
       { path: Routes.Chats, name: t('header.chat'), icon: MessageSquareText },
       { path: Routes.Searches, name: t('header.search'), icon: Search },
@@ -112,7 +112,15 @@ export function Header() {
           {theme === 'light' ? <Sun /> : <Moon />}
         </Button>
         <BellButton></BellButton>
-        {/* Hamburger menu: contains nav items (Home, Datasets, Chats, Searches, Agents, Files) */}
+
+                  <RAGFlowAvatar
+            name={nickname}
+            avatar={avatar}
+            className="size-8 cursor-pointer"
+            onClick={navigateToOldProfile}
+          ></RAGFlowAvatar>
+        <div className="relative">
+                  {/* Hamburger menu: contains nav items (Home, Datasets, Chats, Searches, Agents, Files) */}
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Button variant={'ghost'}>
@@ -132,13 +140,7 @@ export function Header() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <div className="relative">
-          <RAGFlowAvatar
-            name={nickname}
-            avatar={avatar}
-            className="size-8 cursor-pointer"
-            onClick={navigateToOldProfile}
-          ></RAGFlowAvatar>
+
           {/* Temporarily hidden */}
           {/* <Badge className="h-5 w-8 absolute font-normal p-0 justify-center -right-8 -top-2 text-bg-base bg-gradient-to-l from-[#42D7E7] to-[#478AF5]">
             Pro
