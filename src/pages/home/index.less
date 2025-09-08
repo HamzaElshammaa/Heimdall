@@ -10,9 +10,10 @@
 
 .tilesContainer {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  /* Fixed-size tiles centered: each column is exactly 12rem, grid centers itself */
+  grid-template-columns: repeat(auto-fill, 12rem);
+  justify-content: center;
   gap: 1.5rem 2rem;
-  justify-items: center;
   align-items: start;
   padding: 6rem 4rem 4rem;
   max-width: 1400px;
@@ -105,8 +106,7 @@
 }
 
 .tilesContainer {
-  display: grid;
-  
+  display: grid; 
   gap: 1rem;
   justify-items: center;
   align-items: start;
