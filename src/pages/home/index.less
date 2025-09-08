@@ -1,0 +1,145 @@
+.home-page {
+  min-height: 100dvh;
+  background: linear-gradient(#e0e9f4, #93b3db);
+}
+
+/* keep inner spacing consistent with existing layout */
+.home-page > .mx-8 {
+  padding-top: 0.5rem;
+}
+
+.tilesContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 1.5rem 2rem;
+  justify-items: center;
+  align-items: start;
+  padding: 6rem 4rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.portalSelector {
+  position: relative;
+  height: 12rem;
+  width: 12rem;
+  margin: 0;
+  background-color: var(--portal-selector-color, #fff);
+  border-radius: .6rem;
+  border: 0.1rem solid var(--portal-selector-border-color, #90b0c0);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.06);
+  transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease;
+}
+
+.portalSelector:hover,
+.portalSelector:focus {
+  
+    height: 12.3rem;
+    margin-top: -.3rem;
+    border: var(--portal-selector-highlight-color, #2d71b3) .1rem solid;
+    border-top: var(--portal-selector-highlight-color, #2d71b3) .4rem solid;
+    box-shadow: .2rem .3rem .3rem rgba(0, 0, 0, .15);
+}
+
+/* icon and svg sizing/color rules to normalize different icon sources */
+.portalSelector .portalIcon svg,
+.portalSelector .portalIcon img {
+  width: 3rem;
+  height: 3rem;
+}
+
+.portalSelector .iconSvg,
+.portalSelector .portalIcon svg {
+  color: #2b6fb3;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* on hover, invert icon color and use highlight background */
+.portalSelector:hover .portalIcon {
+  background: var(--portal-selector-highlight-color, #2d71b3);
+}
+.portalSelector:hover .iconSvg,
+.portalSelector:hover .portalIcon svg {
+  color: #fff;
+  fill: currentColor;
+  stroke: currentColor;
+}
+
+/* keyboard focus visible */
+.portalSelector:focus {
+  outline: 3px solid rgba(45,113,179,0.16);
+  outline-offset: 4px;
+}
+
+.portalContents {
+  text-align: center;
+}
+
+.portalIcon {
+  width: 5rem;
+  height: 5rem;
+  border-radius: .6rem;
+  background: var(--portal-icon-background-color, #eaf0f6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.portalLabel {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+  color: var(--regular-text-color, #143148);
+  font-weight: 600;
+}
+
+.iconSvg {
+  width: 3rem;
+  height: 3rem;
+  color: #2b6fb3;
+}
+
+/* footer spacing so tiles sit visually centered like reference */
+.home-page::after {
+  content: '';
+  display: block;
+  height: 20vh;
+}
+
+.tilesContainer {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  justify-items: center;
+  align-items: start;
+  padding-top: 6rem;
+}
+
+.portalSelector {
+  position: relative;
+  height: 12rem;
+  width: 12rem;
+  margin: 0 1rem 2rem;
+  background-color: rgb(255 255 255);
+  border-radius: .6rem;
+  border: rgb(144 176 192) .1rem solid;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+}
+
+.portalContents {
+  text-align: center;
+}
+
+.portalLabel {
+  margin-top: 0.6rem;
+  font-size: 1rem;
+  color: #1f3550;
+}
