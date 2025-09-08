@@ -88,13 +88,13 @@ export function Header() {
       }}
     >
       <div className="flex items-center gap-4">
-        <img
-          src={require('@/assets/heimdal2.png')}
-          alt="Heimdal logo"
-          className="mr-[12] cursor-pointer"
-          style={{ height: '1.8rem', width: 'auto', objectFit: 'contain' }}
-          onClick={handleLogoClick}
-        />
+          <img
+            src={require('@/assets/heimdal2.png')}
+            alt="Heimdal logo"
+            className="mr-[12] cursor-pointer"
+            style={{ height: '1.8rem', width: 'auto', objectFit: 'contain', margin: '.75rem 1rem' }}
+            onClick={handleLogoClick}
+          />
   {/* GitHub link removed per user request */}
       </div>
   {/* Top navigation moved into hamburger menu next to avatar */}
