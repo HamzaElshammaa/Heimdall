@@ -7,17 +7,15 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Segmented, SegmentedValue } from '@/components/ui/segmented';
-import { LanguageList, LanguageMap, ThemeEnum } from '@/constants/common';
-import { useChangeLanguage } from '@/hooks/logic-hooks';
+// Segmented navigation removed; using a hamburger menu instead
+import { ThemeEnum } from '@/constants/common';
 import { useNavigatePage } from '@/hooks/logic-hooks/navigate-hooks';
 import { useNavigateWithFromState } from '@/hooks/route-hook';
 import { useFetchUserInfo } from '@/hooks/user-setting-hooks';
 import { Routes } from '@/routes';
-import { camelCase } from 'lodash';
+// camelCase removed; language dropdown removed
 import {
   ChevronDown,
-  CircleHelp,
   Cpu,
   File,
   House,
@@ -26,6 +24,7 @@ import {
   Moon,
   Search,
   Sun,
+  Menu,
 } from 'lucide-react';
 import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -42,21 +41,14 @@ export function Header() {
   const navigate = useNavigateWithFromState();
   const { navigateToOldProfile } = useNavigatePage();
 
-  const changeLanguage = useChangeLanguage();
+  // language change hook removed
   const { setTheme, theme } = useTheme();
 
   const {
     data: { language = 'English', avatar, nickname },
   } = useFetchUserInfo();
 
-  const handleItemClick = (key: string) => () => {
-    changeLanguage(key);
-  };
-
-  const items = LanguageList.map((x) => ({
-    key: x,
-    label: <span>{LanguageMap[x as keyof typeof LanguageMap]}</span>,
-  }));
+  // language selector removed
 
   const onThemeClick = React.useCallback(() => {
     setTheme(theme === ThemeEnum.Dark ? ThemeEnum.Light : ThemeEnum.Dark);
@@ -74,31 +66,7 @@ export function Header() {
     [t],
   );
 
-  const options = useMemo(() => {
-    return tagsData.map((tag) => {
-      const HeaderIcon = tag.icon;
-
-      return {
-        label:
-          tag.path === Routes.Root ? (
-            <HeaderIcon className="size-6"></HeaderIcon>
-          ) : (
-            <span>{tag.name}</span>
-          ),
-        value: tag.path,
-      };
-    });
-  }, [tagsData]);
-
-  // const currentPath = useMemo(() => {
-  //   return (
-  //     tagsData.find((x) => pathname.startsWith(x.path))?.path || Routes.Root
-  //   );
-  // }, [pathname, tagsData]);
-
-  const handleChange = (path: SegmentedValue) => {
-    navigate(path as Routes);
-  };
+  // Navigation items will be rendered in the hamburger menu below
 
   const handleLogoClick = useCallback(() => {
     navigate(Routes.Root);
@@ -111,19 +79,18 @@ export function Header() {
     >
       <div className="flex items-center gap-4">
         <img
-          src={'/logo.svg'}
-          alt="logo"
-          className="size-10 mr-[12] cursor-pointer"
+          src={require('@/assets/heimdal2.png')}
+          alt="Heimdal logo"
+          className="mr-[12] cursor-pointer"
+          style={{ height: 40, width: 'auto', objectFit: 'contain' }}
           onClick={handleLogoClick}
         />
   {/* GitHub link removed per user request */}
       </div>
-      <Segmented
-        options={options}
-        value={pathname}
-        onChange={handleChange}
-      ></Segmented>
+  {/* Top navigation moved into hamburger menu next to avatar */}
   <div className="flex items-center gap-5 text-white">
+        {/* Language dropdown removed */}
+        {/*
         <DropdownMenu>
           <DropdownMenuTrigger>
             <div className="flex items-center gap-1">
@@ -139,13 +106,32 @@ export function Header() {
             ))}
           </DropdownMenuContent>
         </DropdownMenu>
-        <Button variant={'ghost'} onClick={handleDocHelpCLick}>
-          <CircleHelp />
-        </Button>
+        */}
+        {/* Help button removed */}
         <Button variant={'ghost'} onClick={onThemeClick}>
           {theme === 'light' ? <Sun /> : <Moon />}
         </Button>
         <BellButton></BellButton>
+        {/* Hamburger menu: contains nav items (Home, Datasets, Chats, Searches, Agents, Files) */}
+        <DropdownMenu>
+          <DropdownMenuTrigger>
+            <Button variant={'ghost'}>
+              <Menu />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent>
+            {tagsData.map((tag) => (
+              <DropdownMenuItem
+                key={tag.path}
+                onClick={() => {
+                  navigate(tag.path);
+                }}
+              >
+                {tag.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
         <div className="relative">
           <RAGFlowAvatar
             name={nickname}
