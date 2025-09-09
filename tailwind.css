@@ -5,7 +5,7 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 209.32deg 88.89% 61.18%;
+    --foreground: 212.31deg 30.23% 91.57%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 212.31deg 30.23% 91.57%;
@@ -22,7 +22,7 @@
     --primary: 222.2 47.4% 11.2%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
+    --secondary: #ffffff;
     --secondary-foreground: 222.2 47.4% 11.2%;
 
     --accent: 210 40% 96.1%;
@@ -36,7 +36,7 @@
     --radius: 0.5rem;
 
     --background-inverse-standard: rgba(230, 227, 246, 0.15);
-    --background-inverse-standard-foreground: rgb(92, 81, 81);
+    --background-inverse-standard-foreground: rgb(255, 255, 255);
     --colors-background-inverse-standard: rgba(29, 26, 44, 0.1);
     --colors-background-inverse-strong: rgba(11, 10, 18, 0.8);
     --colors-background-inverse-weak: rgba(17, 16, 23, 0.1);
@@ -103,7 +103,7 @@
     --bg-accent: rgba(76, 164, 231, 0.05);
     /* Button ,Body text, Input completed text */
     --text-primary: #161618;
-    --text-secondary: #75787a;
+    --text-secondary: #fff;
     --text-disabled: #b2b5b7;
     /* input placeholder color */
     --text-input-tip: #b2b5b7;
@@ -151,7 +151,7 @@
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 1.2%;
 
-    --secondary: 222.2 47.4% 11.2%;
+    --secondary: #ffffff;
     --secondary-foreground: 210 40% 98%;
 
     --destructive: 0 63% 31%;
@@ -248,7 +248,7 @@
     --text-primary: #f6f6f7;
     --text-secondary: #b2b5b7;
     --text-disabled: #75787a;
-    --text-input-tip: #75787a;
+    --text-input-tip: #fff;
     --border-default: rgba(255, 255, 255, 0.2);
     --border-accent: #ffffff;
     --border-button: rgba(255, 255, 255, 0.1);

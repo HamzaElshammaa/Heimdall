@@ -14,6 +14,9 @@
 :root {
   /* make Tailwind's text-foreground map to the brand link color */
   --foreground: #449ef4;
+  /* make text-secondary white globally */
+  --text-secondary: #ffffff;
+  --background-inverse-strong-foreground: rgb(255, 255, 255);
 }
 
 /* Dark mode gradient colors */
@@ -21,6 +24,9 @@
   /* Dark theme: use solid color by making gradient endpoints equal */
   --home-page-top-color: #29334a;
   --home-page-bottom-color: #29334a;
+  /* force text-secondary white in dark mode too */
+  --text-secondary: #ffffff;
+  --background-inverse-strong-foreground: rgb(255, 255, 255);
 }
 
 /* Force gradient background on all possible containers */
@@ -58,13 +64,33 @@ body {
 }
 
 /* Breadcrumb color override: make breadcrumb text and links use the darker brand blue */
+/* Breadcrumb color rules - scoped and specific to avoid global token changes */
 nav[aria-label="breadcrumb"] {
-  /* force color on breadcrumb items and links */
-  color: #449ef4 !important;
+  /* base list color (uses CSS Color Level 4 hsl syntax) */
+  color: hsl(212.31deg 30.23% 91.57%) !important;
 }
 
-nav[aria-label="breadcrumb"] a,
+/* Links inside breadcrumbs should inherit the base color - keep hover behavior as-is */
+nav[aria-label="breadcrumb"] a {
+  color: inherit !important;
+}
+
+/* Current page label should be white */
 nav[aria-label="breadcrumb"] span[aria-current="page"] {
+  color: #ffffff !important;
+}
+
+/* Separator (the chevron) should be white; lucide icons use stroke/currentColor so set both */
+nav[aria-label="breadcrumb"] li[role="presentation"],
+nav[aria-label="breadcrumb"] li[role="presentation"] > svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+  
+}
+
+/* Override Tailwind utility classes used by breadcrumb components so they show blue */
+nav[aria-label="breadcrumb"] .text-muted-foreground,
+nav[aria-label="breadcrumb"] .text-text-secondary {
   color: #449ef4 !important;
 }
 
