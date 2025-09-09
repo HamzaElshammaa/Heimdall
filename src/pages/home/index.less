@@ -1,3 +1,5 @@
+@import '@/theme/variables.less';
+
 .home-page {
   min-height: 100dvh;
   background: linear-gradient(#e0e9f4, #93b3db);
@@ -10,8 +12,8 @@
 
 .tilesContainer {
   display: grid;
-  /* Fixed-size tiles centered: each column is exactly 12rem, grid centers itself */
-  grid-template-columns: repeat(auto-fill, 12rem);
+  /* Fixed-size tiles centered: tile size comes from theme */
+  grid-template-columns: repeat(auto-fill, @portal-tile-size);
   justify-content: center;
   gap: 1.5rem 2rem;
   align-items: start;
@@ -22,8 +24,8 @@
 
 .portalSelector {
   position: relative;
-  height: 12rem;
-  width: 12rem;
+  height: @portal-tile-size;
+  width: @portal-tile-size;
   margin: 0;
   background-color: var(--portal-selector-color, #fff);
   border-radius: .6rem;
@@ -39,23 +41,23 @@
 .portalSelector:hover,
 .portalSelector:focus {
   
-    height: 12.3rem;
-    margin-top: -.3rem;
-    border: var(--portal-selector-highlight-color, #2d71b3) .1rem solid;
-    border-top: var(--portal-selector-highlight-color, #2d71b3) .4rem solid;
+  height: calc(@portal-tile-size * 1.025);
+  margin-top: calc((@portal-tile-size - (@portal-tile-size * 1.025)) / 2 * -1);
+  border: @portal-selector-highlight .1rem solid;
+  border-top: @portal-selector-highlight .4rem solid;
     box-shadow: .2rem .3rem .3rem rgba(0, 0, 0, .15);
 }
 
 /* icon and svg sizing/color rules to normalize different icon sources */
 .portalSelector .portalIcon svg,
 .portalSelector .portalIcon img {
-  width: 3rem;
-  height: 3rem;
+  width: @portal-icon-size;
+  height: @portal-icon-size;
 }
 
 .portalSelector .iconSvg,
 .portalSelector .portalIcon svg {
-  color: #2b6fb3;
+  color: @portal-icon-color;
   stroke: currentColor;
 }
 
@@ -75,9 +77,11 @@
   text-align: center;
 }
 
+
+
 .portalIcon {
-  width: 5rem;
-  height: 5rem;
+  width: @portal-icon-box-size;
+  height: @portal-icon-box-size;
   border-radius: .6rem;
   background: var(--portal-icon-background-color, #eaf0f600);
   display: inline-flex;
@@ -88,14 +92,20 @@
 .portalLabel {
   margin-top: 0.6rem;
   font-size: 0.95rem;
-  color: var(--regular-text-color, #143148);
+  color: @text-regular;
   font-weight: 600;
+  font-family: @font-heading;
+  transition: color .12s ease;
 }
 
+.portalSelector:hover .portalLabel,
+.portalSelector:focus .portalLabel {
+  color: @portal-label-hover-color;
+}
 .iconSvg {
-  width: 3rem;
-  height: 3rem;
-  color: #2b6fb3;
+  width: @portal-icon-size;
+  height: @portal-icon-size;
+  color: @portal-icon-color;
 }
 
 /* footer spacing so tiles sit visually centered like reference */

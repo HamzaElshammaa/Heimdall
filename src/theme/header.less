@@ -1,0 +1,37 @@
+@import './variables.less';
+
+.heimdal-header {
+  box-sizing: @header-box-sizing;
+  display: flex;
+  z-index: @header-z;
+  height: @header-height;
+  background-color: @header-bg;
+  font-size: @header-font-size;
+  width: 100%;
+  box-shadow: @header-shadow;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+}
+
+.heimdal-header .heimdal-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.heimdal-header .heimdal-logo {
+  height: @header-logo-height;
+  width: auto;
+  object-fit: contain;
+  margin: @header-logo-margin;
+  margin-top: 1rem;
+  cursor: pointer;
+}
+
+.heimdal-header .heimdal-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-right: 1rem;
+}

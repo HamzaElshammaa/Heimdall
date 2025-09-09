@@ -30,6 +30,7 @@ import React, { useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'umi';
 import { BellButton } from './bell-button';
+import '@/theme/header.less';
 
 const handleDocHelpCLick = () => {
   window.open('https://ragflow.io/docs/dev/category/guides', 'target');
@@ -73,31 +74,17 @@ export function Header() {
   }, [navigate]);
 
   return (
-    <section
-      className="flex justify-between items-center text-white"
-      style={{
-        boxSizing: 'content-box',
-        display: 'flex',
-        zIndex: 102,
-        height: '3.5rem',
-        backgroundColor: '#171c43',
-        fontSize: '1rem',
-        width: '100%',
-        boxShadow: '0 0 .8rem rgba(0, 0, 0, .3)',
-      }}
-    >
-      <div className="flex items-center gap-4">
-          <img
-            src={require('@/assets/heimdal2.png')}
-            alt="Heimdal logo"
-            className="mr-[12] cursor-pointer"
-            style={{ height: '1.8rem', width: 'auto', objectFit: 'contain', margin: '.75rem 1rem' }}
-            onClick={handleLogoClick}
-          />
-  {/* GitHub link removed per user request */}
+    <section className="heimdal-header">
+      <div className="heimdal-left">
+        <img
+          src={require('@/assets/heimdal2.png')}
+          alt="Heimdal logo"
+          className="heimdal-logo"
+          onClick={handleLogoClick}
+        />
       </div>
   {/* Top navigation moved into hamburger menu next to avatar */}
-  <div className="flex items-center gap-5 text-white">
+  <div className="heimdal-actions">
         {/* Language dropdown removed */}
         {/*
         <DropdownMenu>
@@ -128,7 +115,7 @@ export function Header() {
             className="size-8 cursor-pointer"
             onClick={navigateToOldProfile}
           ></RAGFlowAvatar>
-        <div className="relative">
+  <div className="relative">
                   {/* Hamburger menu: contains nav items (Home, Datasets, Chats, Searches, Agents, Files) */}
         <DropdownMenu>
           <DropdownMenuTrigger>
