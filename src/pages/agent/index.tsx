@@ -32,7 +32,7 @@ import {
   Settings,
   Upload,
 } from 'lucide-react';
-import { ComponentPropsWithoutRef, useCallback } from 'react';
+import { ComponentPropsWithoutRef, useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'umi';
 import AgentCanvas from './canvas';
@@ -105,7 +105,11 @@ export default function Agent() {
     useShowEmbedModal();
   const { navigateToAgentLogs } = useNavigatePage();
   const time = useWatchAgentChange(chatDrawerVisible);
-
+  const [saveHover, setSaveHover] = useState(false);
+  const [runHover, setRunHover] = useState(false);
+  const [historyHover, setHistoryHover] = useState(false);
+  const [logHover, setLogHover] = useState(false);
+  const [manageHover, setManageHover] = useState(false);
   return (
     <section className="h-full">
       <PageHeader>
@@ -132,30 +136,38 @@ export default function Agent() {
             variant={'secondary'}
             onClick={() => saveGraph()}
             loading={loading}
-            style={{ color: '#ffffff', border: 'none' }}
+            onMouseEnter={() => setSaveHover(true)}
+            onMouseLeave={() => setSaveHover(false)}
+            style={{ color: saveHover ? '#449ef4' : '#ffffff', border: 'none' }}
           >
             <LaptopMinimalCheck /> {t('flow.save')}
           </ButtonLoading>
           <Button
+            onMouseEnter={() => setRunHover(true)}
+            onMouseLeave={() => setRunHover(false)}
             variant={'secondary'}
             onClick={handleRunAgent}
-            style={{ color: '#ffffff', border: 'none' }}
+            style={{ color: runHover ? '#449ef4' : '#ffffff', border: 'none' }}
           >
             <CirclePlay />
             {t('flow.run')}
           </Button>
           <Button
+            onMouseEnter={() => setHistoryHover(true)}
+            onMouseLeave={() => setHistoryHover(false)}
             variant={'secondary'}
             onClick={showVersionDialog}
-            style={{ color: '#ffffff', border: 'none' }}
+            style={{ color: historyHover ? '#449ef4' : '#ffffff', border: 'none' }}
           >
             <History />
             {t('flow.historyversion')}
           </Button>
           <Button
+            onMouseEnter={() => setLogHover(true)}
+            onMouseLeave={() => setLogHover(false)}
             variant={'secondary'}
             onClick={navigateToAgentLogs(id as string)}
-            style={{ color: '#ffffff', border: 'none' }}
+            style={{ color: logHover ? '#449ef4' : '#ffffff', border: 'none' }}
           >
             <Logs />
             {t('flow.log')}
@@ -164,8 +176,10 @@ export default function Agent() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button
+                onMouseEnter={() => setManageHover(true)}
+                onMouseLeave={() => setManageHover(false)}
                 variant={'secondary'}
-                style={{ color: '#ffffff', border: 'none' }}
+                style={{ color: manageHover ? '#449ef4' : '#ffffff', border: 'none' }}
               >
                 <ChevronDown /> {t('flow.management')}
               </Button>
