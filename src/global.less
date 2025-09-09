@@ -10,6 +10,12 @@
   --home-page-bottom-color: #f2f5fc;
 }
 
+/* Global color overrides (project-level tokens) */
+:root {
+  /* make Tailwind's text-foreground map to the brand link color */
+  --foreground: #449ef4;
+}
+
 /* Dark mode gradient colors */
 :root.dark {
   /* Dark theme: use solid color by making gradient endpoints equal */
@@ -49,6 +55,17 @@ body {
   height: 100%;
   width: 100%;
   background: linear-gradient(to bottom, var(--home-page-top-color), var(--home-page-bottom-color)) !important;
+}
+
+/* Breadcrumb color override: make breadcrumb text and links use the darker brand blue */
+nav[aria-label="breadcrumb"] {
+  /* force color on breadcrumb items and links */
+  color: #449ef4 !important;
+}
+
+nav[aria-label="breadcrumb"] a,
+nav[aria-label="breadcrumb"] span[aria-current="page"] {
+  color: #449ef4 !important;
 }
 
 .vue-office-excel {
