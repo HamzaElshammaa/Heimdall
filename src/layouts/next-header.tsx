@@ -26,7 +26,7 @@ import {
   Sun,
   Menu,
 } from 'lucide-react';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useLocation } from 'umi';
 import { BellButton } from './bell-button';
@@ -73,6 +73,11 @@ export function Header() {
     navigate(Routes.Root);
   }, [navigate]);
 
+  // Inline hover color handling for hamburger menu icon
+  const [menuHover, setMenuHover] = useState(false);
+  // Inline hover color handling for theme toggle button
+  const [themeHover, setThemeHover] = useState(false);
+
   return (
     <section className="heimdal-header">
       <div className="heimdal-left">
@@ -104,8 +109,21 @@ export function Header() {
         </DropdownMenu>
         */}
         {/* Help button removed */}
-        <Button variant={'ghost'} onClick={onThemeClick}>
-          {theme === 'light' ? <Sun /> : <Moon />}
+        <Button
+          variant={'header'}
+          onClick={onThemeClick}
+          onMouseEnter={() => setThemeHover(true)}
+          onMouseLeave={() => setThemeHover(false)}
+          style={{
+            background: 'transparent',
+            color: themeHover ? '#449ef4' : 'white',
+          }}
+        >
+          {theme === 'light' ? (
+            <Sun style={{ color: themeHover ? '#449ef4' : 'white' }} />
+          ) : (
+            <Moon style={{ color: themeHover ? '#449ef4' : 'white' }} />
+          )}
         </Button>
         <BellButton></BellButton>
 
@@ -119,8 +137,18 @@ export function Header() {
                   {/* Hamburger menu: contains nav items (Home, Datasets, Chats, Searches, Agents, Files) */}
         <DropdownMenu>
           <DropdownMenuTrigger>
-            <Button variant={'ghost'}>
-              <Menu />
+            <Button
+              variant={'header'}
+              onMouseEnter={() => setMenuHover(true)}
+              onMouseLeave={() => setMenuHover(false)}
+              style={{
+                background: 'transparent',
+                color: menuHover ? '#449ef4' : 'white',
+              }}
+            >
+              <Menu
+                style={{ color: menuHover ? '#449ef4' : 'white' }}
+              />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
