@@ -14,7 +14,7 @@ export type NavItem = {
 export const getNavItems = (t: (k: string) => string): NavItem[] => [
   { path: '/knowledge', name: t('knowledgeBase'), icon: KnowledgeBaseIcon },
   { path: '/chat', name: t('chat'), icon: MessageOutlined },
-  { path: '/search', name: t('search'), icon: SearchOutlined },
+  // { path: '/search', name: t('search'), icon: SearchOutlined }, // temporarily hidden
   { path: '/flow', name: t('flow'), icon: GraphIcon },
   { path: '/file', name: t('fileManager'), icon: FileIcon },
   // External link item

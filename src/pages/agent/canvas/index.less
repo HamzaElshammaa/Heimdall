@@ -1,11 +1,19 @@
 .canvasWrapper {
   position: relative;
-  height: calc(100% - 64px);
+  height: 100%;
+  width: 100%;
+  min-height: 400px; // safety minimum so empty states still visible
+  display: flex;
+  flex-direction: column;
   :global(.react-flow__node-group) {
     .commonNode();
     border-radius: 0 0 10px 10px;
     padding: 0;
     border: 0;
     background-color: transparent;
+  }
+  :global(.react-flow) {
+    width: 100%;
+    height: 100%;
   }
 }

@@ -8,7 +8,7 @@
     --foreground: 212.31deg 30.23% 91.57%;
 
     --muted: 210 40% 96.1%;
-    --muted-foreground: 212.31deg 30.23% 91.57%;
+    --muted-foreground: 22.2 47.4% 11.2%;
 
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 47.4% 11.2%;
@@ -103,7 +103,7 @@
     --bg-accent: rgba(76, 164, 231, 0.05);
     /* Button ,Body text, Input completed text */
     --text-primary: #161618;
-    --text-secondary: #fff;
+    --text-secondary: #000;
     --text-disabled: #b2b5b7;
     /* input placeholder color */
     --text-input-tip: #b2b5b7;

@@ -10,15 +10,16 @@
   padding-top: 0.5rem;
 }
 
+/* Primary tiles grid (single definition) */
 .tilesContainer {
-  display: grid;
-  /* Fixed-size tiles centered: tile size comes from theme */
-  grid-template-columns: repeat(auto-fill, @portal-tile-size);
+  display: flex;
+ /*  grid-template-columns: repeat(auto-fit, minmax(@portal-tile-size, 1fr)); */
   justify-content: center;
-  gap: 1.5rem 2rem;
-  align-items: start;
-  padding: 6rem 4rem 4rem;
-  max-width: 1400px;
+  justify-items: center;
+  gap: 1rem; // reduced from 2rem per request
+  padding: 4rem 2rem 2rem; // slightly reduced top padding to match tighter layout
+  width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -109,41 +110,13 @@
 }
 
 /* footer spacing so tiles sit visually centered like reference */
-.home-page::after {
-  content: '';
-  display: block;
-  height: 20vh;
-}
+/* Remove artificial spacer; rely on natural padding for vertical centering */
+.home-page::after { display: none; }
 
-.tilesContainer {
-  display: grid; 
-  gap: 1rem;
-  justify-items: center;
-  align-items: start;
-  padding-top: 6rem;
-}
+/* Remove duplicated tilesContainer block */
 
-.portalSelector {
-  position: relative;
-  height: 12rem;
-  width: 12rem;
-  margin: 0 1rem 2rem;
-  background-color: rgb(255 255 255);
-  border-radius: .6rem;
-  border: rgb(144 176 192) .1rem solid;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
-}
+/* Keep single portalSelector definition above; duplicate removed */
 
-.portalContents {
-  text-align: center;
-}
+/* portalContents already defined */
 
-.portalLabel {
-  margin-top: 0.6rem;
-  font-size: 1rem;
-  color: #1f3550;
-}
+/* portalLabel already defined */

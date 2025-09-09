@@ -12,7 +12,13 @@ const LandingPage: React.FC = () => {
   const { data: user } = useFetchUserInfo();
   const username = user?.nickname || 'there';
   const { t } = useTranslate('header');
-  const items: PortalItem[] = getNavItems(t);
+  // Base nav items
+  const items: PortalItem[] = getNavItems(t)
+    // Filter out Home (root) and Search entries so they don't appear in portal selectors
+    .filter((x) => {
+      const p = x.path?.toLowerCase();
+      return p !== '/' && p !== '/home' && p !== '/search';
+    });
 
   const onClick = (item: PortalItem) => {
     const url = item.path;

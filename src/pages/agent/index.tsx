@@ -111,7 +111,7 @@ export default function Agent() {
   const [logHover, setLogHover] = useState(false);
   const [manageHover, setManageHover] = useState(false);
   return (
-    <section className="h-full">
+    <section className="flex flex-col h-screen">
       <PageHeader>
         <section>
           <Breadcrumb>
@@ -127,7 +127,7 @@ export default function Agent() {
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
-          <div className="text-xs text-text-secondary translate-y-3">
+          <div className="text-xs text-white translate-y-3">
             {t('flow.autosaved')} {time}
           </div>
         </section>
@@ -212,14 +212,16 @@ export default function Agent() {
           </DropdownMenu>
         </div>
       </PageHeader>
-      <ReactFlowProvider>
-        <DropdownProvider>
-          <AgentCanvas
-            drawerVisible={chatDrawerVisible}
-            hideDrawer={hideChatDrawer}
-          ></AgentCanvas>
-        </DropdownProvider>
-      </ReactFlowProvider>
+      <div className="flex-1 min-h-0">
+        <ReactFlowProvider>
+          <DropdownProvider>
+            <AgentCanvas
+              drawerVisible={chatDrawerVisible}
+              hideDrawer={hideChatDrawer}
+            ></AgentCanvas>
+          </DropdownProvider>
+        </ReactFlowProvider>
+      </div>
       {fileUploadVisible && (
         <UploadAgentDialog
           hideModal={hideFileUploadModal}

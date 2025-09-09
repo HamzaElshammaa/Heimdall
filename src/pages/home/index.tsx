@@ -14,10 +14,9 @@ const Home = () => {
   const navItems = getNavItems((k: string) => k);
 
   const tiles = [
-    { path: Routes.Root, label: 'Home', icon: House },
+    // Home and Search temporarily removed
     { path: Routes.Datasets, label: 'Dataset', icon: navItems[0]?.icon },
     { path: Routes.Chats, label: 'Chat', icon: navItems[1]?.icon },
-    { path: Routes.Searches, label: 'Search', icon: navItems[2]?.icon },
     { path: Routes.Agents, label: 'Agent', icon: navItems[3]?.icon },
     { path: Routes.Files, label: 'File Management', icon: navItems[4]?.icon },
   ];
