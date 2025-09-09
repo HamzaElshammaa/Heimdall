@@ -132,20 +132,30 @@ export default function Agent() {
             variant={'secondary'}
             onClick={() => saveGraph()}
             loading={loading}
+            style={{ color: '#ffffff', border: 'none' }}
           >
             <LaptopMinimalCheck /> {t('flow.save')}
           </ButtonLoading>
-          <Button variant={'secondary'} onClick={handleRunAgent}>
+          <Button
+            variant={'secondary'}
+            onClick={handleRunAgent}
+            style={{ color: '#ffffff', border: 'none' }}
+          >
             <CirclePlay />
             {t('flow.run')}
           </Button>
-          <Button variant={'secondary'} onClick={showVersionDialog}>
+          <Button
+            variant={'secondary'}
+            onClick={showVersionDialog}
+            style={{ color: '#ffffff', border: 'none' }}
+          >
             <History />
             {t('flow.historyversion')}
           </Button>
           <Button
             variant={'secondary'}
             onClick={navigateToAgentLogs(id as string)}
+            style={{ color: '#ffffff', border: 'none' }}
           >
             <Logs />
             {t('flow.log')}
@@ -153,7 +163,10 @@ export default function Agent() {
 
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant={'secondary'}>
+              <Button
+                variant={'secondary'}
+                style={{ color: '#ffffff', border: 'none' }}
+              >
                 <ChevronDown /> {t('flow.management')}
               </Button>
             </DropdownMenuTrigger>
