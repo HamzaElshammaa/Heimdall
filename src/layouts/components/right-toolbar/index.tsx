@@ -56,6 +56,7 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
 
   const navMenuItems: MenuProps['items'] = (navItems || []).map((item) => {
     const IconComp = item.icon;
+    const displayName = item.path === '/agents' ? 'Agents' : item.name;
     return {
       key: item.path,
       label: (
@@ -63,7 +64,7 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
           <span className={styled.menuIcon}>
             {IconComp ? <IconComp className={styled.iconSvg} /> : null}
           </span>
-          <span>{item.name}</span>
+          <span>{displayName}</span>
         </div>
       ),
     };

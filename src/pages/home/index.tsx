@@ -15,7 +15,7 @@ const Home = () => {
 
   const tiles = [
     // Agent first
-    { path: Routes.Agents, label: 'Agent', icon: navItems[2]?.icon },
+    { path: Routes.Agents, label: 'Agents', icon: navItems[2]?.icon },
     { path: Routes.Datasets, label: 'Dataset', icon: navItems[0]?.icon },
     { path: Routes.Chats, label: 'Chat', icon: navItems[1]?.icon },
     { path: Routes.Files, label: 'File Management', icon: navItems[3]?.icon },
