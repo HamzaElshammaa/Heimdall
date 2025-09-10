@@ -58,10 +58,11 @@ export function Header() {
   const tagsData = useMemo(
     () => [
   /* { path: Routes.Root, name: 'Home', icon: House }, */
-      { path: Routes.Datasets, name: t('header.dataset'), icon: Library },
+      { path: Routes.Agents, name: 'Agents', icon: Cpu },
+      { path: Routes.Datasets, name: t('Knowledge base'), icon: Library },
       { path: Routes.Chats, name: t('header.chat'), icon: MessageSquareText },
       /* { path: Routes.Searches, name: t('header.search'), icon: Search }, */
-      { path: Routes.Agents, name: t('header.flow'), icon: Cpu },
+  // Force plural label in hamburger menu
       { path: Routes.Files, name: t('header.fileManager'), icon: File },
     ],
     [t],
