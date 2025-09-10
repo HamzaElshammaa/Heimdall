@@ -80,7 +80,7 @@ export default function Chat() {
   }
 
   return (
-    <section className="h-full flex flex-col pr-5">
+    <section className="h-screen w-full overflow-hidden flex flex-col">
       <PageHeader>
         <Breadcrumb>
           <BreadcrumbList>
@@ -100,16 +100,16 @@ export default function Chat() {
           {t('common.embedIntoSite')}
         </Button>
       </PageHeader>
-      <div className="flex flex-1 min-h-0 pb-9">
+      <div className="flex flex-1 min-h-0 pb-9 overflow-hidden">
         <Sessions
           hasSingleChatBox={hasSingleChatBox}
           handleConversationCardClick={handleConversationCardClick}
           switchSettingVisible={switchSettingVisible}
         ></Sessions>
 
-        <Card className="flex-1 min-w-0 bg-transparent border h-full">
-          <CardContent className="flex p-0 h-full">
-            <Card className="flex flex-col flex-1 bg-transparent min-w-0">
+        <Card className="flex-1 min-w-0 bg-transparent border h-full min-h-0">
+          <CardContent className="flex p-0 h-full min-h-0 overflow-hidden">
+            <Card className="flex flex-col flex-1 bg-transparent min-w-0 min-h-0">
               <CardHeader
                 className={cn('p-5', { 'border-b': hasSingleChatBox })}
               >

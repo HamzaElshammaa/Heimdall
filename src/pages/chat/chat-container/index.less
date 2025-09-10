@@ -1,7 +1,10 @@
 .chatContainer {
   padding: 0 0 24px 24px;
+  min-width: 0; // allow flex child to shrink
   .messageContainer {
     overflow-y: auto;
+    overflow-x: hidden;
     padding-right: 24px;
+    min-width: 0;
   }
 }
