@@ -4,7 +4,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { IFlowTemplate } from '@/interfaces/database/flow';
 import i18n from '@/locales/config';
 import { Plus } from 'lucide-react';
-import { useCallback, useMemo } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 interface IProps {
   data: IFlowTemplate;
@@ -39,9 +39,30 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
     return '';
   }, [data?.description, langKey]);
 
+  // Inline hover styling to mimic portal selector behavior
+  const [hovered, setHovered] = useState(false);
+  const baseStyle: React.CSSProperties = {
+    backgroundColor: 'var(--portal-selector-color, #ffffff)',
+    borderColor: 'var(--portal-selector-border-color, #90b0c0)',
+    borderWidth: '0.01rem',
+    borderStyle: 'solid',
+    borderRadius: '.6rem',
+    position: 'relative',
+  };
+  const hoverStyle: React.CSSProperties = hovered
+    ? {
+
+        borderColor: '#2d71b3',
+        borderTopWidth: '.4rem',
+      }
+    : { borderTopWidth: '0.1rem' };
+
   return (
     <Card
-      className="border-colors-outline-neutral-standard group relative min-h-40 transition-all hover:border-[#2d71b3] hover:shadow-[0_0_0_2px_rgba(45,113,179,0.15)]"
+      className="group relative min-h-40"
+      style={{ ...baseStyle, ...hoverStyle }}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
     >
       <CardContent className="p-4 ">
         {isCreate && (
@@ -63,14 +84,18 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
                 }
                 name={title || 'Agent'}
               ></RAGFlowAvatar>
-              <div className="text-[18px] font-bold ">
+              <div
+                className="text-[18px] font-bold"
+                style={{ color: hovered ? '#449ef4' : undefined }}
+              >
                 {title}
               </div>
             </div>
             <p className="break-words">{description}</p>
             <Button
               variant="default"
-              className="w-1/3 absolute bottom-4 inset-x-4 justify-center text-center m-auto opacity-0 group-hover:opacity-100 transition-opacity"
+              className="w-1/3 absolute bottom-4 inset-x-4 justify-center text-center m-auto"
+              style={{ opacity: hovered ? 1 : 0, transition: 'opacity .12s ease' }}
               onClick={handleClick}
             >
               {t('flow.useTemplate')}
