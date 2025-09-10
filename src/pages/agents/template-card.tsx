@@ -40,7 +40,9 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
   }, [data?.description, langKey]);
 
   return (
-    <Card className="border-colors-outline-neutral-standard group relative min-h-40">
+    <Card
+      className="border-colors-outline-neutral-standard group relative min-h-40 transition-all hover:border-[#2d71b3] hover:shadow-[0_0_0_2px_rgba(45,113,179,0.15)]"
+    >
       <CardContent className="p-4 ">
         {isCreate && (
           <div
@@ -66,15 +68,13 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
               </div>
             </div>
             <p className="break-words">{description}</p>
-            <div className="group-hover:bg-gradient-to-t from-black/70 from-10% via-black/0 via-50% to-black/0 w-full h-full group-hover:block absolute top-0 left-0 hidden rounded-xl">
-              <Button
-                variant="default"
-                className="w-1/3 absolute bottom-4 right-4 left-4 justify-center text-center m-auto"
-                onClick={handleClick}
-              >
-                {t('flow.useTemplate')}
-              </Button>
-            </div>
+            <Button
+              variant="default"
+              className="w-1/3 absolute bottom-4 inset-x-4 justify-center text-center m-auto opacity-0 group-hover:opacity-100 transition-opacity"
+              onClick={handleClick}
+            >
+              {t('flow.useTemplate')}
+            </Button>
           </>
         )}
       </CardContent>

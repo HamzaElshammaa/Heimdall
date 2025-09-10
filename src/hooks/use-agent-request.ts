@@ -120,28 +120,55 @@ export const useFetchAgentTemplates = () => {
           update_time: 0,
         } as unknown as IFlowTemplate);
 
-        // Filter out specific templates by title (case-insensitive)
-        const forbiddenExact = new Set(
-          [
-            'HR recruitment pitch assistant',
-            'SEO Blog generator',
-            'medical consultation',
-            'intelligent investment advisor',
-          ].map((s) => s.toLowerCase()),
-        );
+        // Filter out unwanted templates by normalized title across languages
+        const normalize = (s: string) =>
+          String(s || '')
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, '') // remove non-alphanumerics
+            .trim();
 
-        const shouldRemove = (title?: string) => {
-          const t = String(title ?? '').trim().toLowerCase();
-          if (forbiddenExact.has(t)) return true;
-          // Fuzzy includes to catch minor variations/casing
-          if (t.includes('seo') && t.includes('blog')) return true;
-          if (t.includes('medical') && (t.includes('consult') || t.includes('doctor'))) return true;
-          if (t.includes('investment') && (t.includes('advisor') || t.includes('adviser'))) return true;
-          if (t.includes('hr') && (t.includes('recruit') || t.includes('recruitment'))) return true;
-          return false;
+        const forbiddenSlugs = new Set([
+          // legacy removals
+          normalize('HR recruitment pitch assistant'),
+          normalize('SEO Blog generator'),
+          normalize('medical consultation'),
+          normalize('intelligent investment advisor'),
+          // requested removals
+          normalize('Customer Support'),
+          normalize('Customer Review'),
+          normalize('Ecommerce'),
+          normalize('E-commerce'),
+          normalize('Trip planner'),
+          normalize('ImageLingo'),
+          normalize('CV analysis'),
+          normalize('Generate SEO Blog')
+        ]);
+
+        const extractTitles = (title: unknown): string[] => {
+          if (!title) return [];
+          if (typeof title === 'string') return [title];
+          if (typeof title === 'object') {
+            const obj = title as Record<string, any>;
+            return Object.values(obj).filter((v) => typeof v === 'string') as string[];
+          }
+          return [];
         };
 
-  return data.data.filter((x: IFlowTemplate) => !shouldRemove((x as any)?.title));
+        const shouldRemove = (title: unknown) => {
+          const titles = extractTitles(title).map((t) => normalize(t));
+          return titles.some((slug) =>
+            forbiddenSlugs.has(slug) ||
+            // also catch simple contains for ecommerce and cvanalysis variants
+            slug.includes('ecommerce') ||
+            slug.includes('cvanalysis') ||
+            slug.includes('tripplanner') ||
+            slug.includes('customersupport') ||
+            slug.includes('customerreview') ||
+            slug.includes('ImageLingo'),
+          );
+        };
+
+        return data.data.filter((x: IFlowTemplate) => !shouldRemove((x as any)?.title));
       }
 
       return data?.data ?? [];
