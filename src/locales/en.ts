@@ -75,7 +75,7 @@ export default {
       review: 'from 500+ reviews',
     },
     header: {
-      knowledgeBase: 'Dataset',
+      knowledgeBase: 'Knowledge base',
       chat: 'Chat',
       register: 'Register',
       signin: 'Sign in',
@@ -86,12 +86,12 @@ export default {
       flow: 'Agent',
       search: 'Search',
       welcome: 'Welcome to',
-      dataset: 'Dataset',
+      dataset: 'Knowledge base',
     },
     knowledgeList: {
       welcome: 'Welcome back',
       description: 'Which knowledge bases will you use today?',
-      createKnowledgeBase: 'Create Dataset',
+      createKnowledgeBase: 'Create Knowledge base',
       name: 'Name',
       namePlaceholder: 'Please input name!',
       doc: 'Docs',
@@ -109,7 +109,7 @@ export default {
       retrievalTestingDescription:
         'Conduct a retrieval test to check if RAGFlow can recover the intended content for the LLM.',
       Parse: 'Parse',
-      dataset: 'Dataset',
+      dataset: 'Knowledge base',
       testing: 'Retrieval testing',
       files: 'files',
       configuration: 'Configuration',

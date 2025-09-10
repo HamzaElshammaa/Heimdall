@@ -57,6 +57,7 @@ const RightToolBar: React.FC<RightToolBarProps> = ({
   const navMenuItems: MenuProps['items'] = (navItems || []).map((item) => {
     const IconComp = item.icon;
     const displayName = item.path === '/agents' ? 'Agents' : item.name;
+    
     return {
       key: item.path,
       label: (

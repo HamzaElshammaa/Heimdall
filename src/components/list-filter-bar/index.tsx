@@ -76,7 +76,7 @@ export default function ListFilterBar({
         ) : (
           icon
         )}
-        {leftPanel || title}
+        {leftPanel || title} 
       </div>
       <div className="flex gap-5 items-center">
         {showFilter && (

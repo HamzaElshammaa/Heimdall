@@ -61,7 +61,7 @@ export default function Dataset() {
   return (
     <section className="p-5 min-w-[880px]">
       <ListFilterBar
-        title="Dataset"
+        title="Knowledge base"
         onSearchChange={handleInputChange}
         searchString={searchString}
         value={filterValue}
