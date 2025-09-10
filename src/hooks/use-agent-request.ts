@@ -9,6 +9,13 @@ import {
   IFlowTemplate,
   ITraceData,
 } from '@/interfaces/database/agent';
+// Client-side avatar overrides for agent templates
+import LokiSvg from '@/assets/agent-svg/loki-svgrepo-com.svg';
+import ThorSvg from '@/assets/agent-svg/thor-mjolnir-svgrepo-com.svg';
+import VikingSvg from '@/assets/agent-svg/viking-svgrepo-com.svg';
+import VikingShieldSvg from '@/assets/agent-svg/viking-shield-svgrepo-com.svg';
+import VikingShipSvg from '@/assets/agent-svg/viking-longship-svgrepo-com.svg';
+import DestinySvg from '@/assets/agent-svg/destiny-item-manager-svgrepo-com.svg';
 import { IDebugSingleRequestBody } from '@/interfaces/request/agent';
 import i18n from '@/locales/config';
 import { BeginId } from '@/pages/agent/constant';
@@ -168,7 +175,69 @@ export const useFetchAgentTemplates = () => {
           );
         };
 
-        return data.data.filter((x: IFlowTemplate) => !shouldRemove((x as any)?.title));
+        const filtered: IFlowTemplate[] = data.data.filter((x: IFlowTemplate) => !shouldRemove((x as any)?.title));
+
+        // Map templates to custom SVG avatars deterministically by title
+        const icons = [
+          LokiSvg,
+          ThorSvg,
+          VikingSvg,
+          VikingShieldSvg,
+          VikingShipSvg,
+          DestinySvg,
+        ];
+
+        // Optional: explicit overrides by template title (normalized)
+        // Add entries like [normalize('Your Template Title')]: LokiSvg,
+        const ICON_MAP: Record<string, string> = {
+          // Example override for the blank template
+
+          [normalize(t('Deep Research'))]: VikingSvg,
+          [normalize(t('Choose Your Knowledge Base Agent'))]: VikingShipSvg,
+          [normalize(t('Report Agent Using Knowledge Base'))]: VikingShieldSvg,
+          [normalize(t('Technical Docs QA'))]: DestinySvg,
+          [normalize(t('SQL Assistant'))]: ThorSvg,
+          [normalize(t('WebSearch Assistant'))]: LokiSvg,
+
+          // [normalize('Research Assistant')]: LokiSvg,
+          // [normalize('Code Helper')]: ThorSvg,
+        };
+
+        const pickTitle = (title: unknown): string => {
+          if (!title) return '';
+          if (typeof title === 'string') return title;
+          if (typeof title === 'object') {
+            const obj = title as Record<string, any>;
+            // prefer en/zh if present, else first string value
+            if (typeof obj.en === 'string') return obj.en;
+            if (typeof obj.zh === 'string') return obj.zh;
+            const v = Object.values(obj).find((x) => typeof x === 'string');
+            return (v as string) || '';
+          }
+          return '';
+        };
+
+        const hash = (s: string): number => {
+          let h = 2166136261; // FNV-1a basis
+          for (let i = 0; i < s.length; i++) {
+            h ^= s.charCodeAt(i);
+            h = Math.imul(h, 16777619);
+          }
+          return (h >>> 0);
+        };
+
+        const mapped = filtered.map((tpl) => {
+          const title = pickTitle((tpl as any)?.title) || String((tpl as any)?.id || '');
+          const key = normalize(title);
+          const override = ICON_MAP[key];
+          const idx = icons.length ? hash(title.toLowerCase()) % icons.length : 0;
+          return {
+            ...tpl,
+            avatar: override || icons[idx],
+          } as IFlowTemplate;
+        });
+
+        return mapped;
       }
 
       return data?.data ?? [];
