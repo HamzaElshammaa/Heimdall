@@ -23,6 +23,7 @@ import { cn } from '@/lib/utils';
 import { isEmpty } from 'lodash';
 import { ArrowUpRight, LogOut, Send } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
+import { useEffect } from 'react';
 import { useParams } from 'umi';
 import { useHandleClickConversationCard } from '../hooks/use-click-card';
 import { ChatSettings } from './app-settings/chat-settings';
@@ -57,6 +58,15 @@ export default function Chat() {
   const { conversationId, isNew } = useGetChatSearchParams();
 
   const { isDebugMode, switchDebugMode } = useSwitchDebugMode();
+
+  // Prevent body scroll (second scrollbar) while the chat page is open
+  useEffect(() => {
+    const prevOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prevOverflow;
+    };
+  }, []);
 
   if (isDebugMode) {
     return (
