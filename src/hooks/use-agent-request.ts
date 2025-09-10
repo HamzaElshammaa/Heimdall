@@ -103,13 +103,22 @@ export const useFetchAgentTemplates = () => {
     queryFn: async () => {
       const { data } = await agentService.listTemplates();
       if (Array.isArray(data?.data)) {
-        // Insert a blank template at the top
+        // Insert a blank template at the top (ensure same shape as API items)
         data.data.unshift({
           id: uuid(),
-          title: t('flow.blank'),
-          description: t('flow.createFromNothing'),
+          title: { en: t('flow.blank'), zh: t('flow.blank') },
+          description: {
+            en: t('flow.createFromNothing'),
+            zh: t('flow.createFromNothing'),
+          },
           dsl: EmptyDsl,
-        });
+          avatar: '',
+          canvas_type: 'recommended',
+          create_date: '',
+          create_time: 0,
+          update_date: '',
+          update_time: 0,
+        } as unknown as IFlowTemplate);
 
         // Filter out specific templates by title (case-insensitive)
         const forbiddenExact = new Set(
@@ -132,7 +141,7 @@ export const useFetchAgentTemplates = () => {
           return false;
         };
 
-        return data.data.filter((x: IFlowTemplate) => !shouldRemove(x?.title));
+  return data.data.filter((x: IFlowTemplate) => !shouldRemove((x as any)?.title));
       }
 
       return data?.data ?? [];
@@ -414,7 +423,8 @@ export const useUploadCanvasFileWithProgress = (
         files.forEach((file) => {
           onError(file, error as Error);
         });
-        message.error(error?.message);
+        const err: any = error;
+        message.error(err?.message || 'Upload failed');
       }
     },
   });

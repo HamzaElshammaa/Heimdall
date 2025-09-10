@@ -19,9 +19,25 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
     showModal(data);
   }, [data, showModal]);
 
-  const language = useMemo(() => {
-    return i18n.language || 'en';
-  }, []) as 'en' | 'zh';
+  // Normalize language to the keys provided by templates (en/zh)
+  const langKey = useMemo(() => {
+    const lng = (i18n.language || 'en').toLowerCase();
+    return lng.startsWith('zh') ? 'zh' : 'en';
+  }, [i18n.language]) as 'en' | 'zh';
+
+  const title = useMemo(() => {
+    const t = (data?.title as any);
+    if (t && typeof t === 'object') return t[langKey] ?? t.en ?? t.zh ?? '';
+    if (typeof t === 'string') return t;
+    return '';
+  }, [data?.title, langKey]);
+
+  const description = useMemo(() => {
+    const d = (data?.description as any);
+    if (d && typeof d === 'object') return d[langKey] ?? d.en ?? d.zh ?? '';
+    if (typeof d === 'string') return d;
+    return '';
+  }, [data?.description, langKey]);
 
   return (
     <Card className="border-colors-outline-neutral-standard group relative min-h-40">
@@ -43,13 +59,13 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
                 avatar={
                   data.avatar ? data.avatar : 'https://github.com/shadcn.png'
                 }
-                name={data?.title[language] || 'CN'}
+                name={title || 'Agent'}
               ></RAGFlowAvatar>
               <div className="text-[18px] font-bold ">
-                {data?.title[language]}
+                {title}
               </div>
             </div>
-            <p className="break-words">{data?.description[language]}</p>
+            <p className="break-words">{description}</p>
             <div className="group-hover:bg-gradient-to-t from-black/70 from-10% via-black/0 via-50% to-black/0 w-full h-full group-hover:block absolute top-0 left-0 hidden rounded-xl">
               <Button
                 variant="default"
