@@ -87,16 +87,42 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
         {!isCreate && (
           <>
             <div className="flex justify-start items-center gap-4 mb-4">
-              <RAGFlowAvatar
-                className="w-7 h-7"
-                avatar={
-                  data.avatar ? data.avatar : 'https://github.com/shadcn.png'
-                }
-                name={title || 'Agent'}
-              ></RAGFlowAvatar>
+              {(() => {
+                const a = data.avatar as string | undefined;
+                const isSvg = !!a && (a.startsWith('data:image/svg+xml') || /\.svg(\?|$)/i.test(a) || a.includes('image/svg+xml'));
+                return isSvg ? (
+                <span
+                  className="w-7 h-7 inline-flex items-center justify-center"
+                  // Use currentColor for the mask fill so it matches the title color on hover
+                  style={{ color: hovered ? '#2d71b3' : undefined }}
+                  role="img"
+                  aria-label={`${title || 'Agent'} icon`}
+                >
+                  <span
+                    className="block w-7 h-7"
+                    aria-hidden
+                    style={{
+                      backgroundColor: 'currentColor',
+                      WebkitMask: `url(${a}) no-repeat center`,
+                      mask: `url(${a}) no-repeat center`,
+                      WebkitMaskSize: 'contain',
+                      maskSize: 'contain',
+                    }}
+                  />
+                </span>
+                ) : (
+                <RAGFlowAvatar
+                  className="w-7 h-7"
+                  avatar={
+                    data.avatar ? data.avatar : 'https://github.com/shadcn.png'
+                  }
+                  name={title || 'Agent'}
+                ></RAGFlowAvatar>
+                );
+              })()}
               <div
                 className="text-[18px] font-bold"
-                style={{ color: hovered ? '#449ef4' : undefined }}
+                style={{ color: hovered ? '#2d71b3' : undefined }}
               >
                 {title}
               </div>
