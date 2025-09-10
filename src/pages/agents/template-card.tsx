@@ -48,6 +48,7 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
     borderStyle: 'solid',
     borderRadius: '.6rem',
     position: 'relative',
+    cursor: 'pointer',
   };
   const hoverStyle: React.CSSProperties = hovered
     ? {
@@ -63,6 +64,15 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
       style={{ ...baseStyle, ...hoverStyle }}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={handleClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          handleClick();
+        }
+      }}
     >
       <CardContent className="p-4 ">
         {isCreate && (
@@ -92,14 +102,6 @@ export function TemplateCard({ data, showModal, isCreate = false }: IProps) {
               </div>
             </div>
             <p className="break-words">{description}</p>
-            <Button
-              variant="default"
-              className="w-1/3 absolute bottom-4 inset-x-4 justify-center text-center m-auto"
-              style={{ opacity: hovered ? 1 : 0, transition: 'opacity .12s ease' }}
-              onClick={handleClick}
-            >
-              {t('flow.useTemplate')}
-            </Button>
           </>
         )}
       </CardContent>
