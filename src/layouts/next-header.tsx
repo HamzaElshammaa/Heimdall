@@ -25,6 +25,7 @@ import {
   Search,
   Sun,
   Menu,
+  Globe,
 } from 'lucide-react';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -64,6 +65,8 @@ export function Header() {
       /* { path: Routes.Searches, name: t('header.search'), icon: Search }, */
   // Force plural label in hamburger menu
       { path: Routes.Files, name: t('header.fileManager'), icon: File },
+  // External link
+  { path: 'https://cloud.langfuse.com/', name: 'Observability', icon: Globe },
     ],
     [t],
   );
@@ -157,7 +160,11 @@ export function Header() {
               <DropdownMenuItem
                 key={tag.path}
                 onClick={() => {
-                  navigate(tag.path);
+                  if (/^https?:\/\//i.test(tag.path)) {
+                    window.open(tag.path, '_blank', 'noopener,noreferrer');
+                  } else {
+                    navigate(tag.path);
+                  }
                 }}
               >
                 {tag.name}

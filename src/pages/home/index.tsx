@@ -4,7 +4,7 @@ import { useNavigateWithFromState } from '@/hooks/route-hook';
 import { Routes } from '@/routes';
 import { useTranslation } from 'react-i18next';
 import { getNavItems } from '@/layouts/components/header/nav-items';
-import { House } from 'lucide-react';
+import { Globe } from 'lucide-react';
 
 const Home = () => {
   const navigate = useNavigateWithFromState();
@@ -19,10 +19,16 @@ const Home = () => {
   { path: Routes.Datasets, label: 'Knowledge base', icon: navItems[0]?.icon },
     { path: Routes.Chats, label: 'Chat', icon: navItems[1]?.icon },
     { path: Routes.Files, label: 'File Management', icon: navItems[3]?.icon },
+  // External portal: Langfuse
+  { path: 'https://cloud.langfuse.com/', label: 'Observability', icon: Globe },
   ];
 
   const onClick = useCallback(
     (path: string) => () => {
+      if (/^https?:\/\//i.test(path)) {
+        window.open(path, '_blank');
+        return;
+      }
       navigate(path as any);
     },
     [navigate],
@@ -59,3 +65,5 @@ const Home = () => {
 };
 
 export default Home;
+
+
