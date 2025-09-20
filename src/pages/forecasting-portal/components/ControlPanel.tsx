@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import type { Folder, Forecast } from '../data';
 import { ChevronDown, ChevronRight } from 'lucide-react';
+import { SearchInput } from '@/components/ui/input';
 
 export type ControlPanelProps = {
   folders: Folder[];
@@ -62,13 +63,12 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   );
 
   return (
-    <aside className="h-full flex flex-col gap-3">
-      <input
-        type="text"
+    <aside className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md">
+      <SearchInput
         value={query}
-        onChange={(e) => setQuery(e.target.value)}
+        onChange={(e) => setQuery(String((e.target as HTMLInputElement).value))}
         placeholder="Search forecasts..."
-        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+        className="text-foreground"
       />
 
       <div>
@@ -89,7 +89,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               <button
                 type="button"
                 onClick={() => toggleFolder(folder.id)}
-                className="flex w-full items-center gap-2 py-1 text-left hover:text-blue-600"
+                className="flex w-full items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1"
               >
                 <Icon className="h-4 w-4" />
                 <span className="font-medium">{folder.name}</span>
@@ -97,7 +97,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               {isOpen && (
                 <div className="ml-6 mt-1">
                   {folder.forecasts.length ? (
-                    folder.forecasts.map(renderForecastRow)
+                    folder.forecasts.map((f) => (
+                      <label key={f.id} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-bg-card/30 text-foreground">
+                        <input
+                          type="checkbox"
+                          checked={selectedForecastIds.includes(f.id)}
+                          onChange={() => toggleSelection(f.id)}
+                          className="accent-blue-600"
+                        />
+                        <span className="truncate" title={f.name}>
+                          {f.name}
+                        </span>
+                      </label>
+                    ))
                   ) : (
                     <div className="text-xs text-muted-foreground">No forecasts</div>
                   )}
