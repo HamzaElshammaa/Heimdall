@@ -97,7 +97,7 @@
     "react-string-replace": "^1.1.1",
     "react-syntax-highlighter": "^15.5.0",
     "react18-json-view": "^0.2.8",
-    "recharts": "^2.12.4",
+    "recharts": "^2.15.4",
     "rehype-katex": "^7.0.1",
     "rehype-raw": "^7.0.0",
     "remark-gfm": "^4.0.0",

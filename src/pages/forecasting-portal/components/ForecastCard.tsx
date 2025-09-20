@@ -1,6 +1,7 @@
 import React from 'react';
 import type { Forecast } from '../data';
 import { Star } from 'lucide-react';
+import ForecastChart from './ForecastChart';
 
 export type ForecastCardProps = {
   forecast: Forecast;
@@ -25,7 +26,10 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, onToggleFavorite 
       {forecast.description ? (
         <p className="mt-2 text-sm text-muted-foreground">{forecast.description}</p>
       ) : null}
-      <div className="mt-3 text-xs text-muted-foreground">Updated {new Date(forecast.updatedAt).toLocaleString()}</div>
+      <div className="mt-3 text-xs text-muted-foreground">{forecast.periodLabel ?? `Updated ${new Date(forecast.updatedAt).toLocaleString()}`}</div>
+      <div className="mt-3">
+        <ForecastChart forecast={forecast} height={140} />
+      </div>
     </div>
   );
 };
