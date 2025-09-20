@@ -1,0 +1,114 @@
+import React, { useMemo, useState } from 'react';
+import type { Folder, Forecast } from '../data';
+import { ChevronDown, ChevronRight } from 'lucide-react';
+
+export type ControlPanelProps = {
+  folders: Folder[];
+  selectedForecastIds: string[];
+  onSelectionChange: (ids: string[]) => void;
+};
+
+const ControlPanel: React.FC<ControlPanelProps> = ({
+  folders,
+  selectedForecastIds,
+  onSelectionChange,
+}) => {
+  const [query, setQuery] = useState('');
+  const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
+
+  const normalizedQuery = query.trim().toLowerCase();
+
+  const favorites = useMemo<Forecast[]>(() => {
+    const all = folders.flatMap((f) => f.forecasts);
+    const favs = all.filter((x) => x.isFavorite);
+    if (!normalizedQuery) return favs;
+    return favs.filter((x) => x.name.toLowerCase().includes(normalizedQuery));
+  }, [folders, normalizedQuery]);
+
+  const filteredFolders = useMemo(() => {
+    if (!normalizedQuery) return folders;
+    return folders
+      .map((folder) => ({
+        ...folder,
+        forecasts: folder.forecasts.filter((x) =>
+          x.name.toLowerCase().includes(normalizedQuery),
+        ),
+      }))
+      .filter((f) => f.forecasts.length > 0);
+  }, [folders, normalizedQuery]);
+
+  const toggleFolder = (id: string) =>
+    setOpenFolders((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const toggleSelection = (id: string) => {
+    const set = new Set(selectedForecastIds);
+    if (set.has(id)) set.delete(id);
+    else set.add(id);
+    onSelectionChange(Array.from(set));
+  };
+
+  const renderForecastRow = (f: Forecast) => (
+    <label key={f.id} className="flex items-center gap-2 py-1">
+      <input
+        type="checkbox"
+        checked={selectedForecastIds.includes(f.id)}
+        onChange={() => toggleSelection(f.id)}
+        className="accent-blue-600"
+      />
+      <span className="truncate" title={f.name}>
+        {f.name}
+      </span>
+    </label>
+  );
+
+  return (
+    <aside className="h-full flex flex-col gap-3">
+      <input
+        type="text"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Search forecasts..."
+        className="w-full rounded-md border border-border bg-background px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <div>
+        <div className="text-xs font-medium text-muted-foreground mb-1">Favorites</div>
+        <div className="pl-1">
+          {favorites.length ? favorites.map(renderForecastRow) : (
+            <div className="text-xs text-muted-foreground">No favorites</div>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-2 space-y-1">
+        {filteredFolders.map((folder) => {
+          const isOpen = !!openFolders[folder.id];
+          const Icon = isOpen ? ChevronDown : ChevronRight;
+          return (
+            <div key={folder.id} className="border-b border-border pb-2">
+              <button
+                type="button"
+                onClick={() => toggleFolder(folder.id)}
+                className="flex w-full items-center gap-2 py-1 text-left hover:text-blue-600"
+              >
+                <Icon className="h-4 w-4" />
+                <span className="font-medium">{folder.name}</span>
+              </button>
+              {isOpen && (
+                <div className="ml-6 mt-1">
+                  {folder.forecasts.length ? (
+                    folder.forecasts.map(renderForecastRow)
+                  ) : (
+                    <div className="text-xs text-muted-foreground">No forecasts</div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </aside>
+  );
+};
+
+export default ControlPanel;
