@@ -1,14 +1,18 @@
 .chatWrapper {
   height: 100%;
   width: 100%;
+  min-height: 100dvh;
+  overflow-x: hidden;
 
   .chatAppWrapper {
     width: 288px;
     padding: 26px;
+  min-width: 0;
 
     .chatAppContent {
       overflow-y: auto;
       width: 100%;
+      max-width: 100%;
     }
 
     .chatAppCard {
@@ -35,8 +39,9 @@
     }
   }
   .chatTitleWrapper {
-    width: 220px;
+  width: 220px;
     padding: 26px 0;
+  min-width: 0;
   }
 
   .chatTitle {
@@ -44,8 +49,9 @@
   }
 
   .chatTitleContent {
-    padding: 5px 10px;
-    overflow: auto;
+  padding: 5px 10px;
+  overflow: auto;
+  max-width: 100%;
   }
 
   .chatSpin {
@@ -78,5 +84,7 @@
   .divider {
     margin: 0;
     height: 100%;
+  // ensure divider doesn't create horizontal scroll
+  max-width: 1px;
   }
 }
