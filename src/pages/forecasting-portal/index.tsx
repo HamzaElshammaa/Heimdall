@@ -10,10 +10,7 @@ const ForecastingPortal: React.FC = () => {
   return (
     <div className="p-6 h-full flex flex-col min-h-0">
       <header>
-        <h1 className="text-2xl font-semibold">Forecasting Portal</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Welcome to the forecasting portal. Build and monitor forecasts here.
-        </p>
+        <h1 className="text-2xl font-semibold">Forecasting</h1>
       </header>
 
       <div className="mt-4 grid grid-cols-12 gap-6 min-h-0 flex-1">
