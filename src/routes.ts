@@ -44,6 +44,7 @@ export enum Routes {
   UserSetting = '/user-setting',
   DataFlows = '/data-flows',
   DataFlow = '/data-flow',
+  ForecastingPortal = '/forecasting-portal',
 }
 
 const routes = [
@@ -250,6 +251,17 @@ const routes = [
       {
         path: Routes.Files,
         component: `@/pages${Routes.Files}`,
+      },
+    ],
+  },
+  {
+    path: Routes.ForecastingPortal,
+    layout: false,
+    component: '@/layouts/next',
+    routes: [
+      {
+        path: Routes.ForecastingPortal,
+        component: `@/pages${Routes.ForecastingPortal}`,
       },
     ],
   },
