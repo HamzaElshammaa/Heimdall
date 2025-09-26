@@ -28,6 +28,19 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     return favs.filter((x) => x.name.toLowerCase().includes(normalizedQuery));
   }, [folders, normalizedQuery]);
 
+  const toggleFavoritesSelection = () => {
+    const favIds = favorites.map((f) => f.id);
+    const favSet = new Set(favIds);
+    const allSelected = favIds.length > 0 && favIds.every((id) => selectedForecastIds.includes(id));
+    if (allSelected) {
+      // unselect all favorites
+      onSelectionChange(selectedForecastIds.filter((id) => !favSet.has(id)));
+    } else {
+      // select all favorites
+      onSelectionChange(Array.from(new Set([...selectedForecastIds, ...favIds])));
+    }
+  };
+
   const filteredFolders = useMemo(() => {
     if (!normalizedQuery) return folders;
     return folders
@@ -93,7 +106,23 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       </div>
 
       <div>
-        <div className="text-xs font-medium text-muted-foreground mb-1">Favorites</div>
+        <div className="flex items-center justify-between">
+          <div className="text-xs font-medium text-muted-foreground mb-1">Favorites</div>
+          {favorites.length > 0 && (() => {
+            const favIds = favorites.map((f) => f.id);
+            const allSelected = favIds.length > 0 && favIds.every((id) => selectedForecastIds.includes(id));
+            return (
+              <button
+                type="button"
+                onClick={toggleFavoritesSelection}
+                className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded"
+                title={allSelected ? 'Unselect all favorites' : 'Select all favorites'}
+              >
+                {allSelected ? 'Unselect all' : 'Select all'}
+              </button>
+            );
+          })()}
+        </div>
         <div className="pl-1">
           {favorites.length ? favorites.map(renderForecastRow) : (
             <div className="text-xs text-muted-foreground">No favorites</div>

@@ -67,7 +67,16 @@ const ForecastingPortal: React.FC = () => {
         open={creatingFolder}
         allForecasts={folders.flatMap((f) => f.forecasts)}
         onClose={() => setCreatingFolder(false)}
-        onSave={(folder) => setFolders((prev) => [...prev, folder])}
+        onSave={(newFolder) =>
+          setFolders((prev) => {
+            // when creating a new folder from selected forecasts, remove those forecasts from any existing folders
+            const movedIds = new Set(newFolder.forecasts.map((f) => f.id));
+            const cleaned = prev.map((fld) => ({
+              ...fld,
+              forecasts: fld.forecasts.filter((fc) => !movedIds.has(fc.id)),
+            }));
+            return [...cleaned, newFolder];
+          })}
       />
     </div>
   );
