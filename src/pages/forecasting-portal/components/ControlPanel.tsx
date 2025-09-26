@@ -62,8 +62,18 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     </label>
   );
 
+  const _scrollStyle = `
+  .forecasting-control-scroll::-webkit-scrollbar { display: none; }
+  `;
+
   return (
-    <aside className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md overflow-y-hidden">
+    <>
+      <style>{_scrollStyle}</style>
+      <aside
+        className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md forecasting-control-scroll overflow-y-auto"
+        // hide scrollbars in Firefox and IE/Edge
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
       <SearchInput
         value={query}
         onChange={(e) => setQuery(String((e.target as HTMLInputElement).value))}
@@ -148,6 +158,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         })}
       </div>
     </aside>
+    </>
   );
 };
 
