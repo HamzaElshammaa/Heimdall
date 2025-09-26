@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { mockFolders, type Folder } from './data';
 import ControlPanel from './components/ControlPanel';
+import CreateFolderModal from './components/CreateFolderModal';
 import DisplayArea from './components/DisplayArea';
 import { LayoutGrid, Maximize2 } from 'lucide-react';
 
@@ -8,6 +9,7 @@ const ForecastingPortal: React.FC = () => {
   const [folders, setFolders] = useState<Folder[]>(mockFolders);
   const [selectedForecastIds, setSelectedForecastIds] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'compact' | 'expanded'>('compact');
+  const [creatingFolder, setCreatingFolder] = useState(false);
 
   const toggleView = useCallback(() => {
     setViewMode((v) => (v === 'compact' ? 'expanded' : 'compact'));
@@ -38,6 +40,7 @@ const ForecastingPortal: React.FC = () => {
             folders={folders}
             selectedForecastIds={selectedForecastIds}
             onSelectionChange={setSelectedForecastIds}
+            onCreateFolder={() => setCreatingFolder(true)}
           />
         </div>
         <div className="col-span-12 md:col-span-8 xl:col-span-9 min-h-0">
@@ -60,6 +63,12 @@ const ForecastingPortal: React.FC = () => {
           </div>
         </div>
       </div>
+      <CreateFolderModal
+        open={creatingFolder}
+        allForecasts={folders.flatMap((f) => f.forecasts)}
+        onClose={() => setCreatingFolder(false)}
+        onSave={(folder) => setFolders((prev) => [...prev, folder])}
+      />
     </div>
   );
 };

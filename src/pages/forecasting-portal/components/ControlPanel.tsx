@@ -7,12 +7,14 @@ export type ControlPanelProps = {
   folders: Folder[];
   selectedForecastIds: string[];
   onSelectionChange: (ids: string[]) => void;
+  onCreateFolder?: () => void;
 };
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
   folders,
   selectedForecastIds,
   onSelectionChange,
+  onCreateFolder,
 }) => {
   const [query, setQuery] = useState('');
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
@@ -74,12 +76,21 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         // hide scrollbars in Firefox and IE/Edge
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-      <SearchInput
+      <div className="flex items-center gap-2">
+        <SearchInput
         value={query}
         onChange={(e) => setQuery(String((e.target as HTMLInputElement).value))}
         placeholder="Search forecasts..."
         className="text-foreground"
-      />
+        />
+        <button
+          type="button"
+          onClick={() => onCreateFolder && onCreateFolder()}
+          className="ml-2 inline-flex items-center gap-2 rounded-md border border-border bg-bg-card px-3 py-1 text-sm hover:bg-bg-card/80"
+        >
+          New Group
+        </button>
+      </div>
 
       <div>
         <div className="text-xs font-medium text-muted-foreground mb-1">Favorites</div>
