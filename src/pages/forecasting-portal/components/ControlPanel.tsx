@@ -63,7 +63,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   );
 
   return (
-    <aside className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md">
+    <aside className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md overflow-y-hidden">
       <SearchInput
         value={query}
         onChange={(e) => setQuery(String((e.target as HTMLInputElement).value))}
@@ -86,14 +86,42 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           const Icon = isOpen ? ChevronDown : ChevronRight;
           return (
             <div key={folder.id} className="border-b border-border pb-2">
-              <button
-                type="button"
-                onClick={() => toggleFolder(folder.id)}
-                className="flex w-full items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1"
-              >
-                <Icon className="h-4 w-4" />
-                <span className="font-medium">{folder.name}</span>
-              </button>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => toggleFolder(folder.id)}
+                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1"
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="font-medium">{folder.name}</span>
+                </button>
+                {isOpen && folder.forecasts.length > 0 ? (
+                  (() => {
+                    const folderIds = folder.forecasts.map((f) => f.id);
+                    const allSelected = folderIds.every((id) => selectedForecastIds.includes(id));
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const set = new Set(selectedForecastIds);
+                          if (allSelected) {
+                            // unselect all in this folder
+                            for (const id of folderIds) set.delete(id);
+                          } else {
+                            // select all in this folder
+                            for (const id of folderIds) set.add(id);
+                          }
+                          onSelectionChange(Array.from(set));
+                        }}
+                        className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded"
+                        title={allSelected ? 'Unselect all items' : 'Select all items'}
+                      >
+                        {allSelected ? 'Unselect all' : 'Select all'}
+                      </button>
+                    );
+                  })()
+                ) : null}
+              </div>
               {isOpen && (
                 <div className="ml-6 mt-1">
                   {folder.forecasts.length ? (
