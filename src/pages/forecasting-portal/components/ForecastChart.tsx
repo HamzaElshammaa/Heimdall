@@ -82,14 +82,10 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
             tickLine={{ stroke: AXIS }}
           />
           <YAxis hide domain={["auto", "auto"]} />
-          {showTooltip ? (
-            <Tooltip
-              labelFormatter={(v) => new Date(v as string).toLocaleString()}
-              contentStyle={{ fontSize: 12 }}
-            />
-          ) : null}
-
-          <Legend verticalAlign="top" height={24} />
+          <Tooltip
+            labelFormatter={(v) => new Date(v as string).toLocaleString()}
+            contentStyle={{ fontSize: 12 }}
+          />
           {forecast.series.map((s) => {
             const lname = s.name.toLowerCase();
             const color = lname.includes('forecast') ? BLUE_LIGHT : BLUE;
