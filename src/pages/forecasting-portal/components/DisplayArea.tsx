@@ -11,9 +11,23 @@ export type DisplayAreaProps = {
 
 const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds, viewMode = 'compact', onToggleFavorite }) => {
   const selectedForecasts = useMemo<Forecast[]>(() => {
-    const all = folders.flatMap((f) => f.forecasts.map((fc) => ({ ...fc, _folderId: f.id })));
-    const set = new Set(selectedForecastIds);
-    return all.filter((x) => set.has(x.id));
+    // Assign each selected forecast to exactly one folder (newest folder first).
+    const idSet = new Set(selectedForecastIds);
+    const assigned = new Map<string, { forecast: Forecast; folderId: string }>();
+
+    // iterate folders from newest to oldest so newest groups take display priority
+    for (let i = folders.length - 1; i >= 0; i--) {
+      const folder = folders[i];
+      for (const fc of folder.forecasts) {
+        if (!idSet.has(fc.id)) continue;
+        if (!assigned.has(fc.id)) {
+          assigned.set(fc.id, { forecast: fc, folderId: folder.id });
+        }
+      }
+    }
+
+    // Build the array of forecasts with assigned folder id
+    return Array.from(assigned.values()).map(({ forecast, folderId }) => ({ ...forecast, _folderId: folderId } as Forecast & { _folderId: string }));
   }, [folders, selectedForecastIds]);
 
   if (!selectedForecasts.length) {
@@ -25,7 +39,7 @@ const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds,
   // favorites first (only those that are selected)
   const favoritesSelected = selectedForecasts.filter((s) => s.isFavorite);
 
-  // group remaining selected forecasts by folder
+  // group remaining selected forecasts by their assigned folder
   const folderMap = new Map<string, Forecast[]>();
   for (const f of selectedForecasts) {
     if (f.isFavorite) continue; // already shown in favorites
