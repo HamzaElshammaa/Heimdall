@@ -79,6 +79,10 @@ export function Header() {
     navigate(Routes.Root);
   }, [navigate]);
 
+  const heimdalLogo = require('@/assets/heimdal2.png');
+  const kalixLogo = require('@/assets/KalixLogo2.png');
+  const isForecasting = pathname.startsWith(Routes.ForecastingPortal);
+
   // Inline hover color handling for hamburger menu icon
   const [menuHover, setMenuHover] = useState(false);
   // Inline hover color handling for theme toggle button
@@ -86,13 +90,23 @@ export function Header() {
 
   return (
     <section className="heimdal-header">
-      <div className="heimdal-left">
+      <div className="heimdal-left" >
         <img
-          src={require('@/assets/heimdal2.png')}
-          alt="Heimdal logo"
+          src={isForecasting ? kalixLogo : heimdalLogo}
+          alt={isForecasting ? 'Kalix logo' : 'Heimdal logo'}
           className="heimdal-logo"
           onClick={handleLogoClick}
         />
+
+    {/* height: 1.8rem;
+    width: auto;
+    object-fit: contain;
+    margin: 0.75rem 1rem;
+    margin-top: 1rem; */}
+
+        {isForecasting ? (
+          <span style={{ color: 'white', fontSize: 18, fontWeight: 600, height: '1.8rem', width: 'auto', objectFit: 'contain', margin: '0.75rem -1rem', marginTop: '1.2rem' }} >Forecaster</span>
+        ) : null}
       </div>
   {/* Top navigation moved into hamburger menu next to avatar */}
   <div className="heimdal-actions">

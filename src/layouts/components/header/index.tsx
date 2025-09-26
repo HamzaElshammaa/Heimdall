@@ -23,6 +23,9 @@ const RagHeader = () => {
   const { theme: themeRag } = useTheme();
   const tagsData = useMemo(() => getNavItems(t), [t]);
 
+  const heimdalLogo = require('@/assets/heimdal2.png');
+  const kalixLogo = require('@/assets/KalixLogo2.png');
+
   const currentPath = useMemo(() => {
     return (
       tagsData.find((x) => pathname.startsWith(x.path))?.name || 'knowledge'
@@ -55,8 +58,20 @@ const RagHeader = () => {
     >
       <Link to="/">
         <Space size={12} className={styles.logoWrapper}>
-          <img src={require('@/assets/heimdal2.png')} alt="" className={styles.appIcon} />
-          {/* <span className={styles.appName}>{appConf.appName}</span> */}
+          {(() => {
+            const isForecasting = pathname.startsWith('/forecasting-portal');
+            return (
+              <>
+                <img src={isForecasting ? kalixLogo : heimdalLogo} alt="" className={styles.appIcon} />
+                {isForecasting ? (
+                  <span className={styles.appName}>Forecaster</span>
+                ) : (
+                  // keep previous behavior for other pages (app name hidden by default)
+                  null
+                )}
+              </>
+            );
+          })()}
         </Space>
       </Link>
       <Space size={[0, 8]} wrap>
