@@ -18,7 +18,6 @@ const ForecastingPortal: React.FC = () => {
     <div className="p-6 h-screen flex flex-col min-h-0">
       <header className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">Forecasting</h1>
         </div>
         <div>
           <button

@@ -76,89 +76,173 @@ function makeSeries(
   };
 }
 
+// richer series generator: enforces a single line series with light seasonality so charts
+// look good and have continuous data (no nulls). Always returns kind='line'.
+function makeRichSeries(
+  id: string,
+  name: string,
+  days: number,
+  start: number,
+  slope: number,
+  volatility = 0,
+  floor = 0,
+): Series {
+  const base = generateTrend(days, start, slope, volatility, floor);
+  // choose seasonal period (yearly/monthly/weekly) based on length
+  const period = days >= 365 ? 365 : days >= 60 ? 30 : 7;
+  const amplitude = Math.max(1, Math.abs(start) * 0.06);
+  const data = base.map((dp, i) => {
+    const seasonal = Math.sin((2 * Math.PI * i) / period) * amplitude;
+    const y = Math.max(floor, dp.y + seasonal);
+    return { t: dp.t, y: Number(y.toFixed(2)) };
+  });
+  return { id, name, kind: 'line', data };
+}
+
 // ---------- Mock data including plot-ready series ----------
 export const mockFolders: Folder[] = [
   {
     id: 'fld-001',
-    name: 'Sales',
+    name: 'EPG Core Nodes',
     forecasts: [
       {
         id: 'fc-1001',
-        name: 'Q4 Revenue Forecast',
-        description: 'Projected revenue for Q4 by region',
+        name: 'Sample #1',
         updatedAt: '2025-09-10T12:00:00Z',
         isFavorite: true,
         periodLabel: 'Last 12 weeks',
         series: [
-          makeSeries('fc-1001-actual', 'Actual', 'line', 84, 100, 0.4, 3),
-          makeSeries('fc-1001-forecast', 'Forecast', 'line', 84, 102, 0.45, 2),
+          makeRichSeries('fc-1001-series', 'Series', 84, 100, 0.4, 3),
         ],
       },
       {
         id: 'fc-1002',
-        name: 'Monthly Sales Trend',
-        description: 'Rolling 12-month sales trend',
+        name: 'Sample #2',
         updatedAt: '2025-09-08T09:30:00Z',
         isFavorite: false,
         periodLabel: 'Last 12 months',
         series: [
-          makeSeries('fc-1002-actual', 'Actual', 'area', 365, 60, 0.15, 2),
+          makeRichSeries('fc-1002-series', 'Series', 365, 60, 0.15, 2),
+        ],
+      },
+    ],
+  },
+  {
+    id: 'fld-005',
+    name: 'Diameter Signaling',
+    forecasts: [
+      {
+        id: 'fc-5001',
+        name: 'Diameter Msgs Throughput',
+        description: 'Diameter signaling messages per minute',
+        updatedAt: new Date().toISOString(),
+        isFavorite: false,
+        periodLabel: 'Last 7 days',
+        series: [
+          makeRichSeries('fc-5001-series', 'Series', 7, 450, 4, 12, 100),
+        ],
+      },
+    ],
+  },
+  {
+    id: 'fld-006',
+    name: 'Network BW',
+    forecasts: [
+      {
+        id: 'fc-6001',
+        name: 'Backhaul Bandwidth',
+        description: 'Aggregate backhaul bandwidth (Mbps)',
+        updatedAt: new Date().toISOString(),
+        isFavorite: true,
+        periodLabel: 'Last 14 days',
+        series: [
+          makeRichSeries('fc-6001-series', 'Series', 14, 1200, 8, 40, 600),
+        ],
+      },
+    ],
+  },
+  {
+    id: 'fld-007',
+    name: 'Call Volume',
+    forecasts: [
+      {
+        id: 'fc-7001',
+        name: 'Calls per Day',
+        description: 'Total call volume per day',
+        updatedAt: new Date().toISOString(),
+        isFavorite: false,
+        periodLabel: 'Last 30 days',
+        series: [
+          makeRichSeries('fc-7001-series', 'Series', 30, 5050, 22, 150, 1100),
+        ],
+      },
+    ],
+  },
+  {
+    id: 'fld-008',
+    name: 'PS sessions',
+    forecasts: [
+      {
+        id: 'fc-8001',
+        name: 'PS Sessions Active',
+        description: 'Active PS sessions over time',
+        updatedAt: new Date().toISOString(),
+        isFavorite: false,
+        periodLabel: 'Last 14 days',
+        series: [
+          makeRichSeries('fc-8001-series', 'Series', 14, 2210, 12, 60, 900),
         ],
       },
     ],
   },
   {
     id: 'fld-002',
-    name: 'Inventory',
+    name: 'DownTown Area Traffic',
     forecasts: [
       {
         id: 'fc-2001',
-        name: 'Stockout Risk',
-        description: 'SKU-level stockout risk over next 6 weeks',
+        name: 'Sample #1',
         updatedAt: '2025-09-05T14:15:00Z',
         isFavorite: false,
         periodLabel: 'Next 6 weeks',
         series: [
-          makeSeries('fc-2001-prob', 'Probability', 'line', 42, 0.2, 0.005, 0.05, 0),
+          makeRichSeries('fc-2001-series', 'Series', 42, 0.2, 0.005, 0.05, 0),
         ],
       },
       {
         id: 'fc-2002',
-        name: 'Reorder Point Optimization',
-        description: 'Optimized reorder points by category',
+        name: 'Sample #2',
         updatedAt: '2025-09-01T16:45:00Z',
         isFavorite: true,
         periodLabel: 'Last 8 weeks',
         series: [
-          makeSeries('fc-2002-rop', 'ROP', 'line', 56, 120, -0.2, 2, 50),
+          makeRichSeries('fc-2002-series', 'Series', 56, 120, -0.2, 2, 50),
         ],
       },
     ],
   },
   {
     id: 'fld-003',
-    name: 'Marketing',
+    name: 'VIP Segment',
     forecasts: [
       {
         id: 'fc-3001',
-        name: 'Campaign Uplift',
-        description: 'Expected uplift for Q3 awareness campaigns',
+        name: 'Sample #1',
         updatedAt: '2025-08-28T10:20:00Z',
         isFavorite: false,
         periodLabel: 'Last 90 days',
         series: [
-          makeSeries('fc-3001-uplift', 'Uplift', 'bar', 90, 5, 0.02, 1, 0),
+          makeRichSeries('fc-3001-series', 'Series', 90, 5, 0.02, 1, 0),
         ],
       },
       {
         id: 'fc-3002',
-        name: 'Lead Conversion Rate',
-        description: 'Projected conversions from MQL to SQL',
+        name: 'Sample #2',
         updatedAt: '2025-09-12T08:00:00Z',
         isFavorite: true,
         periodLabel: 'Last 60 days',
         series: [
-          makeSeries('fc-3002-conv', 'Conversion', 'line', 60, 0.08, 0.0006, 0.005, 0),
+          makeRichSeries('fc-3002-series', 'Series', 60, 0.08, 0.0006, 0.005, 0),
         ],
       },
     ],
@@ -166,40 +250,39 @@ export const mockFolders: Folder[] = [
   // Additional folder aligned with the sample UI mock for telecom KPIs
   {
     id: 'fld-004',
-    name: 'Network KPIs',
+    name: 'Interconnect Links',
     forecasts: [
       {
         id: 'fc-4001',
-        name: 'Traffic Overview',
+        name: 'Sample #1',
         description: 'Throughput trend across the network',
         updatedAt: new Date().toISOString(),
         isFavorite: true,
         periodLabel: 'Last 7 days',
         series: [
-          makeSeries('fc-4001-actual', 'Actual', 'line', 7, 120, 1.8, 5),
-          makeSeries('fc-4001-forecast', 'Forecast', 'line', 7, 118, 2.0, 3),
+          makeRichSeries('fc-4001-series', 'Series', 7, 120, 1.8, 5),
         ],
       },
       {
         id: 'fc-4002',
-        name: 'Call Volume',
+        name: 'Sample #2',
         description: 'Daily call counts',
         updatedAt: new Date().toISOString(),
         isFavorite: true,
         periodLabel: 'Last 14 days',
         series: [
-          makeSeries('fc-4002-bars', 'Calls', 'bar', 14, 800, 5, 60, 500),
+          makeRichSeries('fc-4002-series', 'Series', 14, 800, 5, 60, 500),
         ],
       },
       {
         id: 'fc-4003',
-        name: 'Data Usage',
+        name: 'Sample #3',
         description: 'Aggregate data usage per day (GB)',
         updatedAt: new Date().toISOString(),
         isFavorite: false,
         periodLabel: 'Last 14 days',
         series: [
-          makeSeries('fc-4003-usage', 'Usage', 'line', 14, 60, 0.9, 2, 10),
+          makeRichSeries('fc-4003-series', 'Series', 14, 60, 0.9, 2, 10),
         ],
       },
     ],

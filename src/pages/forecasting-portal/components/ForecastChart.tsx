@@ -9,6 +9,7 @@ import {
   Line,
   Area,
   Bar,
+  Legend,
   CartesianGrid,
 } from 'recharts';
 
@@ -18,8 +19,10 @@ export type ForecastChartProps = {
   showTooltip?: boolean;
 };
 
-const BLUE = '#3b82f6'; // tailwind blue-500
+const BLUE = '#3b82f6'; // tailwind blue-500 (training/default)
 const BLUE_LIGHT = '#60a5fa'; // tailwind blue-400
+const GREEN = '#10b981'; // tailwind emerald-500 (actual)
+const ORANGE = '#f97316'; // tailwind orange-500 (forecast)
 const GRID = 'rgba(148,163,184,0.25)'; // slate-400 @ 25%
 const AXIS = 'rgba(148,163,184,0.6)';
 
@@ -37,7 +40,34 @@ function mergeSeries(series: Series[]) {
 }
 
 const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, showTooltip = false }) => {
-  const data = useMemo(() => mergeSeries(forecast.series), [forecast.series]);
+  // merged timeline rows (one row per timestamp)
+  const baseData = useMemo(() => mergeSeries(forecast.series), [forecast.series]);
+
+  // create split keys for actual (first 70%) and prediction (last 30%)
+  const data = useMemo(() => {
+    const n = baseData.length;
+    const cutoff = Math.max(1, Math.floor(n * 0.7));
+    return baseData.map((row, idx) => {
+      const out: Record<string, any> = { ...row };
+      for (const s of forecast.series) {
+        const raw = row[s.id] ?? null;
+        if (idx < cutoff) {
+          out[`${s.id}_actual`] = raw;
+          out[`${s.id}_pred`] = null;
+        } else if (idx === cutoff) {
+          // boundary row: set both so lines connect
+          out[`${s.id}_actual`] = raw;
+          out[`${s.id}_pred`] = raw;
+        } else {
+          out[`${s.id}_actual`] = null;
+          out[`${s.id}_pred`] = raw;
+        }
+        // remove the original key to avoid duplicate plotting
+        delete out[s.id];
+      }
+      return out;
+    });
+  }, [baseData, forecast.series]);
 
   return (
     <div className="w-full" style={{ height }}>
@@ -59,36 +89,58 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
             />
           ) : null}
 
+          <Legend verticalAlign="top" height={24} />
           {forecast.series.map((s) => {
-            const color = s.kind === 'bar' ? BLUE : s.name.toLowerCase().includes('forecast') ? BLUE_LIGHT : BLUE;
-            const dash = s.name.toLowerCase().includes('forecast') && (s.kind === 'line' || s.kind === 'area') ? '5 5' : undefined;
-            if (s.kind === 'bar') {
-              return <Bar key={s.id} dataKey={s.id} fill={color} radius={[4, 4, 0, 0]} />;
-            }
+            const lname = s.name.toLowerCase();
+            const color = lname.includes('forecast') ? BLUE_LIGHT : BLUE;
+
             if (s.kind === 'area') {
+              // render area as filled actual + dotted prediction (prediction as line only)
               return (
-                <Area
-                  key={s.id}
-                  type="monotone"
-                  dataKey={s.id}
-                  stroke={color}
-                  strokeWidth={2}
-                  fill={color}
-                  fillOpacity={0.2}
-                  dot={false}
-                />
+                <React.Fragment key={s.id}>
+                  <Area
+                    type="monotone"
+                    dataKey={`${s.id}_actual`}
+                    stroke={color}
+                    strokeWidth={2}
+                    fill={color}
+                    fillOpacity={0.18}
+                    dot={false}
+                    name={`${s.name} (Actual)`}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey={`${s.id}_pred`}
+                    stroke={color}
+                    strokeWidth={2}
+                    dot={false}
+                    strokeDasharray="5 5"
+                    name={`${s.name} (Prediction)`}
+                  />
+                </React.Fragment>
               );
             }
+            // default: line (and previously bar) series -> split into actual (solid) and prediction (dotted)
             return (
-              <Line
-                key={s.id}
-                type="monotone"
-                dataKey={s.id}
-                stroke={color}
-                strokeWidth={2}
-                dot={false}
-                strokeDasharray={dash}
-              />
+              <React.Fragment key={s.id}>
+                <Line
+                  type="monotone"
+                  dataKey={`${s.id}_actual`}
+                  stroke={color}
+                  strokeWidth={2}
+                  dot={false}
+                  name={`${s.name} (Actual)`}
+                />
+                <Line
+                  type="monotone"
+                  dataKey={`${s.id}_pred`}
+                  stroke={color}
+                  strokeWidth={2}
+                  dot={false}
+                  strokeDasharray="5 5"
+                  name={`${s.name} (Prediction)`}
+                />
+              </React.Fragment>
             );
           })}
         </ComposedChart>
