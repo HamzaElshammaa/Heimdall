@@ -121,6 +121,237 @@ function parseAirPassengers(): Series {
 
 const airPassengersSeries = parseAirPassengers();
 
+// ---------- Microsoft Stock dataset (user-provided CSV expected) ----------
+// Expected columns (case-insensitive): Date,Open,High,Low,Close,Adj Close,Volume
+// Provide the CSV content in the MICROSOFT_STOCK_CSV constant below. If left empty,
+// the affected forecasts will render empty charts until populated.
+// Truncated Microsoft stock sample (synthetic/representative subset)
+// Note: Replace or extend with full dataset if needed.
+const MICROSOFT_STOCK_CSV = `Date,Open,High,Low,Close,Adj Close,Volume
+2025-01-02,413.50,417.20,409.85,415.32,415.32,21234500
+2025-01-03,415.10,416.90,408.40,410.05,410.05,23890123
+2025-01-06,409.80,412.75,404.60,406.11,406.11,25500456
+2025-01-07,407.25,414.30,406.90,412.88,412.88,23111234
+2025-01-08,413.90,418.60,411.55,417.77,417.77,22765001
+2025-01-09,418.10,420.25,415.40,416.02,416.02,21988765
+2025-01-10,415.95,417.10,410.05,411.44,411.44,24670012
+2025-01-13,410.80,413.55,407.90,409.33,409.33,19876543
+2025-01-14,409.50,411.20,403.75,405.26,405.26,26544321
+2025-01-15,405.90,409.10,401.30,402.48,402.48,28110999
+2025-01-16,403.25,407.85,402.10,406.77,406.77,25432100
+2025-01-17,407.20,409.40,403.95,404.61,404.61,26007891
+2025-01-21,405.10,410.65,404.25,409.98,409.98,21004567
+2025-01-22,410.50,412.95,407.80,411.73,411.73,20550001
+2025-01-23,412.40,415.55,409.60,414.92,414.92,22345000
+2025-01-24,415.20,416.40,410.15,411.02,411.02,22988776
+2025-01-27,410.80,412.30,406.70,407.58,407.58,24001234
+2025-01-28,408.00,409.85,403.50,405.11,405.11,25119990
+2025-01-29,405.60,408.95,404.40,407.33,407.33,23455670
+2025-01-30,407.90,411.75,406.25,410.88,410.88,22003456
+2025-01-31,411.30,413.40,408.55,409.22,409.22,23670045
+2025-02-03,409.15,412.05,405.95,410.44,410.44,22114560
+2025-02-04,410.90,414.80,409.10,413.66,413.66,22778890
+2025-02-05,414.10,416.20,411.35,415.55,415.55,23345678
+2025-02-06,416.00,419.75,414.50,418.92,418.92,24400123
+2025-02-07,419.20,421.40,416.85,417.06,417.06,23876543
+2025-02-10,417.50,420.15,415.30,419.77,419.77,22654321
+2025-02-11,420.05,422.60,417.90,421.88,421.88,21890011
+2025-02-12,422.10,425.25,420.55,424.66,424.66,23004567
+2025-02-13,424.90,426.40,421.35,422.07,422.07,23567890
+2025-02-14,422.50,424.10,419.00,420.33,420.33,22876500`;
+
+function parseMicrosoftStock(): {
+  open: DataPoint[];
+  high: DataPoint[];
+  low: DataPoint[];
+  close: DataPoint[];
+  volume: DataPoint[];
+} {
+  const open: DataPoint[] = [];
+  const high: DataPoint[] = [];
+  const low: DataPoint[] = [];
+  const close: DataPoint[] = [];
+  const volume: DataPoint[] = [];
+  if (!MICROSOFT_STOCK_CSV.trim()) {
+    return { open, high, low, close, volume };
+  }
+  const lines = MICROSOFT_STOCK_CSV.trim().split(/\r?\n/);
+  if (!lines.length) return { open, high, low, close, volume };
+  const header = lines.shift()!;
+  const cols = header.split(/,|;|\t/).map((h) => h.trim().toLowerCase());
+  const idx = (name: string) => cols.findIndex((c) => c === name.toLowerCase());
+  const dateIdx = idx('date');
+  const openIdx = idx('open');
+  const highIdx = idx('high');
+  const lowIdx = idx('low');
+  const closeIdx = idx('close');
+  const volumeIdx = idx('volume');
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const parts = line.split(/,|;|\t/);
+    if (dateIdx < 0 || parts.length < cols.length) continue;
+    const dateRaw = parts[dateIdx].trim();
+    // Accept ISO or YYYY-MM-DD or M/D/YYYY
+    let dt: Date | null = null;
+    if (/^\d{4}-\d{2}-\d{2}$/.test(dateRaw)) dt = new Date(dateRaw + 'T00:00:00Z');
+    else if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(dateRaw)) {
+      const [m, d, y] = dateRaw.split('/').map(Number); dt = new Date(Date.UTC(y, m - 1, d));
+    } else if (!isNaN(Date.parse(dateRaw))) dt = new Date(dateRaw);
+    if (!dt) continue;
+    const iso = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate())).toISOString();
+    const num = (i: number) => (i >= 0 && parts[i] ? Number(parts[i]) : NaN);
+    const o = num(openIdx); if (!isNaN(o)) open.push({ t: iso, y: o });
+    const h = num(highIdx); if (!isNaN(h)) high.push({ t: iso, y: h });
+    const l = num(lowIdx); if (!isNaN(l)) low.push({ t: iso, y: l });
+    const c = num(closeIdx); if (!isNaN(c)) close.push({ t: iso, y: c });
+    const v = num(volumeIdx); if (!isNaN(v)) volume.push({ t: iso, y: v });
+  }
+  return { open, high, low, close, volume };
+}
+
+const msftStock = parseMicrosoftStock();
+const msftHighSeries: Series = { id: 'fc-4001-series', name: 'MSFT High', kind: 'line', data: msftStock.high };
+const msftOpenSeries: Series = { id: 'fc-4002-series', name: 'MSFT Open', kind: 'line', data: msftStock.open };
+const msftVolumeSeries: Series = { id: 'fc-4003-series', name: 'MSFT Volume', kind: 'line', data: msftStock.volume };
+const msftLowSeries: Series = { id: 'fc-3001-series', name: 'MSFT Low', kind: 'line', data: msftStock.low };
+const msftCloseSeries: Series = { id: 'fc-1002-series', name: 'MSFT Close', kind: 'line', data: msftStock.close };
+
+// ---------- D202 dataset (Usage & Cost) truncated sample ----------
+// Expected columns: date,usage,cost (lowercase headers required here)
+// Replace or extend with full dataset as needed.
+const D202_CSV = `date,usage,cost
+2025-01-02,1200,4500.75
+2025-01-03,1310,4702.10
+2025-01-06,1255,4621.55
+2025-01-07,1402,4890.20
+2025-01-08,1388,4815.90
+2025-01-09,1422,4922.33
+2025-01-10,1375,4784.10
+2025-01-13,1330,4699.05
+2025-01-14,1295,4610.42
+2025-01-15,1355,4755.88
+2025-01-16,1410,4866.11
+2025-01-17,1392,4822.67
+2025-01-21,1450,4975.00
+2025-01-22,1475,5033.44
+2025-01-23,1505,5110.20
+2025-01-24,1490,5077.32
+2025-01-27,1433,4933.10
+2025-01-28,1380,4820.55
+2025-01-29,1402,4869.77
+2025-01-30,1425,4920.43
+2025-01-31,1418,4895.26
+2025-02-03,1399,4855.10
+2025-02-04,1433,4938.88
+2025-02-05,1460,5002.11
+2025-02-06,1488,5066.44
+2025-02-07,1470,5022.70
+2025-02-10,1495,5081.33
+2025-02-11,1510,5125.55
+2025-02-12,1533,5188.66
+2025-02-13,1522,5155.42
+2025-02-14,1508,5110.05`;
+
+function parseD202(): { usage: DataPoint[]; cost: DataPoint[] } {
+  const usage: DataPoint[] = [];
+  const cost: DataPoint[] = [];
+  if (!D202_CSV.trim()) return { usage, cost };
+  const lines = D202_CSV.trim().split(/\r?\n/);
+  if (!lines.length) return { usage, cost };
+  const header = lines.shift()!; // enforce expected order
+  for (const line of lines) {
+    if (!line.trim()) continue;
+    const [date, usageStr, costStr] = line.split(',');
+    if (!date) continue;
+    const dt = new Date(date.trim() + 'T00:00:00Z');
+    const iso = new Date(Date.UTC(dt.getUTCFullYear(), dt.getUTCMonth(), dt.getUTCDate())).toISOString();
+    const u = Number(usageStr);
+    const c = Number(costStr);
+    if (!isNaN(u)) usage.push({ t: iso, y: u });
+    if (!isNaN(c)) cost.push({ t: iso, y: c });
+  }
+  return { usage, cost };
+}
+
+const d202 = parseD202();
+const d202UsageSeries: Series = { id: 'fc-3001-usage', name: 'Usage', kind: 'line', data: d202.usage };
+const d202CostSeries: Series = { id: 'fc-4002-cost', name: 'Cost', kind: 'line', data: d202.cost };
+
+// ---------- station_rio dataset (truncated sample) ----------
+// Columns: YEAR,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC,D-J-F,M-A-M,J-J-A,S-O-N,metANN
+// We generate separate time series for JAN..JUN monthly means and metANN (annual mean).
+// Missing values encoded as 999.90 are skipped.
+// Date handling: monthly points use first of the month (UTC). Annual mean uses Dec 31 of the year.
+// Extend or replace STATION_RIO_CSV with more rows if needed.
+const STATION_RIO_CSV = `YEAR,JAN,FEB,MAR,APR,MAY,JUN,JUL,AUG,SEP,OCT,NOV,DEC,D-J-F,M-A-M,J-J-A,S-O-N,metANN\n1973,27.73,27.97,25.70,26.49,22.42,22.76,22.14,21.03,21.46,22.46,23.06,25.85,27.45,24.87,21.98,22.33,24.16\n1974,26.68,27.16,26.56,23.94,22.76,20.70,21.20,21.81,22.91,22.80,24.51,24.54,26.56,24.42,21.24,23.41,23.91\n1975,25.27,26.92,26.43,22.82,21.37,20.50,19.68,22.98,22.40,22.65,24.11,26.53,25.58,23.54,21.05,23.05,23.31\n1976,27.48,26.20,25.55,24.99,22.01,21.18,20.14,21.15,21.27,22.06,24.40,25.56,26.74,24.18,20.82,22.58,23.58\n1977,27.13,28.51,26.88,24.22,22.35,22.13,23.07,22.29,22.44,23.92,24.48,24.84,27.07,24.48,22.50,23.61,24.42\n1978,27.44,26.55,26.42,23.39,21.85,20.03,21.94,21.28,22.49,23.51,25.00,25.66,26.28,23.89,21.08,23.67,23.73\n1979,23.86,25.69,24.80,23.36,23.05,20.30,20.29,22.42,22.05,24.25,24.07,26.02,25.07,23.74,21.00,23.46,23.32\n1980,25.39,27.24,27.83,24.63,23.41,21.20,21.81,22.22,21.05,23.10,24.20,27.01,26.22,25.29,21.74,22.78,24.01\n1981,27.42,28.06,26.26,23.85,22.87,20.94,19.90,21.50,23.19,22.49,25.25,25.73,27.50,24.33,20.78,23.64,24.06\n1982,24.55,27.51,25.00,22.73,21.58,22.44,21.30,22.34,22.41,23.50,26.15,24.98,25.93,23.10,22.03,24.02,23.77\n1983,26.81,27.63,25.99,24.08,23.82,21.18,21.55,20.91,20.53,23.03,25.25,25.94,26.47,24.63,21.21,22.94,23.81\n1984,28.56,28.85,26.54,24.46,24.77,22.91,22.20,21.00,21.91,24.44,25.11,25.24,27.78,25.26,22.04,23.82,24.72\n1985,25.53,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,25.65,999.90,999.90,999.90,999.90\n1986,999.90,27.93,26.95,25.97,999.90,22.70,21.09,22.66,21.46,23.04,25.76,26.17,999.90,25.45,22.15,23.42,24.60\n1987,27.68,27.25,25.86,25.85,22.73,20.48,22.43,20.80,21.02,22.96,24.59,26.07,27.03,24.81,21.24,22.86,23.99\n1988,28.82,26.03,26.49,24.65,22.70,19.74,19.24,21.36,21.89,22.19,23.57,25.75,26.97,24.61,20.11,22.55,23.56\n1989,26.98,26.59,26.45,25.43,21.92,20.90,19.47,21.67,21.70,22.07,24.85,25.86,26.44,24.60,20.68,22.87,23.65\n1990,28.63,27.47,27.50,27.05,22.19,21.50,20.25,19.95,21.17,24.21,26.19,26.08,27.32,25.58,20.57,23.86,24.33\n1991,25.44,26.43,25.52,24.72,21.69,21.42,19.64,20.91,20.80,23.59,24.49,27.26,25.98,23.98,20.66,22.96,23.39\n1992,27.37,999.90,26.75,24.63,23.55,23.31,20.77,20.94,21.74,23.67,23.83,25.38,27.58,24.98,21.67,23.08,24.33\n1993,27.48,27.25,26.81,25.68,22.85,20.98,999.90,999.90,999.90,999.90,999.90,999.90,26.70,25.11,999.90,999.90,999.90\n1994,999.90,999.90,26.56,24.97,23.95,21.16,21.59,20.85,22.72,24.56,25.63,27.32,999.90,25.16,21.20,24.30,24.48\n1995,28.64,27.59,26.75,24.97,23.17,21.84,23.06,23.90,23.05,23.21,25.13,25.93,27.85,24.96,22.93,23.80,24.89\n1996,28.48,28.17,26.76,25.09,22.01,21.16,19.65,20.59,21.44,23.50,23.96,26.51,27.53,24.62,20.47,22.97,23.90\n1997,26.52,28.03,25.35,24.57,22.43,21.53,22.00,21.76,23.28,24.25,26.27,27.77,27.02,24.12,21.76,24.60,24.38\n1998,28.57,28.32,27.72,26.03,22.89,20.59,21.30,23.21,23.48,23.23,23.54,26.86,28.22,25.55,21.70,23.42,24.72\n1999,27.83,27.96,27.00,24.69,22.21,21.25,21.56,20.94,22.77,21.62,23.04,25.70,27.55,24.63,21.25,22.48,23.98\n2000,27.08,26.89,25.85,24.95,22.78,21.94,20.23,21.46,22.28,25.24,25.28,26.75,26.56,24.53,21.21,24.27,24.14\n2001,28.25,28.55,27.83,27.17,23.24,22.67,21.32,22.23,22.20,23.06,24.47,25.82,27.85,26.08,22.07,23.24,24.81\n2002,27.04,26.29,27.72,26.34,23.38,23.08,21.27,23.49,21.78,25.67,25.67,26.45,26.38,25.81,22.61,24.37,24.80\n2003,26.94,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,26.96,999.90,999.90,999.90,999.90\n2004,999.90,999.90,25.61,25.42,22.46,21.50,20.70,21.23,23.76,23.19,25.07,25.65,999.90,24.50,21.14,24.01,24.14\n2005,26.75,26.12,26.64,26.09,23.85,22.41,20.91,23.41,22.18,25.45,24.60,25.26,26.17,25.53,22.24,24.08,24.51\n2006,27.62,27.60,27.01,24.88,21.94,21.39,21.47,22.63,22.23,23.55,24.57,26.62,26.83,24.61,21.83,23.45,24.18\n2007,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,999.90,24.91,25.07,26.97,999.90,999.90,999.90,24.36,999.90\n2008,26.25,26.54,26.37,25.28,22.69,21.59,21.08,22.66,21.88,24.37,24.27,25.39,26.59,24.78,21.78,23.51,24.16\n2009,26.32,27.96,26.55,24.21,23.16,20.71,21.21,21.88,24.01,24.07,27.91,26.20,26.56,24.64,21.27,25.33,24.45\n2010,28.58,29.10,26.49,24.59,22.87,20.35,21.93,21.25,22.74,22.86,24.45,26.92,27.96,24.65,21.18,23.35,24.28\n2011,28.14,28.69,25.50,25.48,21.86,20.52,20.61,22.32,21.79,23.71,23.24,25.47,27.92,24.28,21.15,22.91,24.07\n2012,25.87,27.90,26.57,25.29,22.25,22.67,21.67,22.07,23.02,25.22,24.14,28.53,26.41,24.70,22.14,24.13,24.35\n2013,26.13,28.18,26.18,24.20,22.94,22.59,20.86,21.71,23.42,23.60,24.75,26.05,27.61,24.44,21.72,23.92,24.42\n2014,28.99,28.95,27.59,25.99,23.29,22.84,21.44,22.64,23.89,24.84,25.84,28.38,28.00,25.62,22.31,24.86,25.20\n2015,29.93,28.43,26.78,25.93,23.18,21.98,22.93,23.53,23.28,25.33,26.43,999.90,28.91,25.30,22.81,25.01,25.51\n2016,27.08,28.98,27.43,27.93,22.93,20.53,21.53,23.23,23.03,24.48,24.78,27.22,27.63,26.10,21.76,24.10,24.90\n2017,28.92,28.27,26.97,25.52,22.57,21.97,20.02,22.42,24.22,25.97,25.47,27.01,28.14,25.02,21.47,25.22,24.96\n2018,28.06,27.21,27.81,26.26,23.81,22.91,22.96,21.91,23.71,24.56,25.61,27.55,27.43,25.96,22.59,24.63,25.15\n2019,30.25,28.05,27.50,26.55,24.85,23.10,21.75,22.30,23.05,25.25,999.90,999.90,28.62,26.30,22.38,24.74,25.51`;
+
+interface StationRioParsed {
+  jan: DataPoint[]; feb: DataPoint[]; mar: DataPoint[]; apr: DataPoint[]; may: DataPoint[]; jun: DataPoint[]; annual: DataPoint[];
+}
+
+function parseStationRio(): StationRioParsed {
+  const res: StationRioParsed = { jan: [], feb: [], mar: [], apr: [], may: [], jun: [], annual: [] };
+  if (!STATION_RIO_CSV.trim()) return res;
+  const lines = STATION_RIO_CSV.trim().split(/\r?\n/);
+  const header = lines.shift();
+  const cols = header!.split(',');
+  const colIndex = (name: string) => cols.findIndex(c => c.trim().toLowerCase() === name.toLowerCase());
+  const idxYear = colIndex('YEAR');
+  const idxJan = colIndex('JAN');
+  const idxFeb = colIndex('FEB');
+  const idxMar = colIndex('MAR');
+  const idxApr = colIndex('APR');
+  const idxMay = colIndex('MAY');
+  const idxJun = colIndex('JUN');
+  const idxAnn = colIndex('metANN');
+  const monthDate = (year: number, monthZero: number) => new Date(Date.UTC(year, monthZero, 1)).toISOString();
+  const isValid = (v: string) => v !== undefined && v.trim() !== '' && v.trim() !== '999.90' && !isNaN(Number(v));
+  for (const line of lines) {
+    const parts = line.split(',');
+    if (parts.length < cols.length) continue;
+    const yearStr = parts[idxYear];
+    if (!yearStr) continue;
+    const year = Number(yearStr);
+    if (isNaN(year)) continue;
+    const pushIfValid = (idx: number, arr: DataPoint[], monthZero: number) => {
+      const raw = parts[idx];
+      if (isValid(raw)) arr.push({ t: monthDate(year, monthZero), y: Number(raw) });
+    };
+    pushIfValid(idxJan, res.jan, 0);
+    pushIfValid(idxFeb, res.feb, 1);
+    pushIfValid(idxMar, res.mar, 2);
+    pushIfValid(idxApr, res.apr, 3);
+    pushIfValid(idxMay, res.may, 4);
+    pushIfValid(idxJun, res.jun, 5);
+    const annRaw = parts[idxAnn];
+    if (isValid(annRaw)) {
+      const annDate = new Date(Date.UTC(year, 11, 31)).toISOString();
+      res.annual.push({ t: annDate, y: Number(annRaw) });
+    }
+  }
+  return res;
+}
+
+const stationRio = parseStationRio();
+export const stationRioJanSeries: Series = { id: 'station-rio-jan', name: 'Rio Jan Temp (°C)', kind: 'line', data: stationRio.jan };
+export const stationRioFebSeries: Series = { id: 'station-rio-feb', name: 'Rio Feb Temp (°C)', kind: 'line', data: stationRio.feb };
+export const stationRioMarSeries: Series = { id: 'station-rio-mar', name: 'Rio Mar Temp (°C)', kind: 'line', data: stationRio.mar };
+export const stationRioAprSeries: Series = { id: 'station-rio-apr', name: 'Rio Apr Temp (°C)', kind: 'line', data: stationRio.apr };
+export const stationRioMaySeries: Series = { id: 'station-rio-may', name: 'Rio May Temp (°C)', kind: 'line', data: stationRio.may };
+export const stationRioJunSeries: Series = { id: 'station-rio-jun', name: 'Rio Jun Temp (°C)', kind: 'line', data: stationRio.jun };
+export const stationRioAnnualSeries: Series = { id: 'station-rio-annual', name: 'Rio Annual Mean (°C)', kind: 'line', data: stationRio.annual };
+
+// For convenience if you want to quickly attach multiple: ordered collection
+export const stationRioSelectedSeries: Series[] = [
+  stationRioJanSeries,
+  stationRioFebSeries,
+  stationRioMarSeries,
+  stationRioAprSeries,
+  stationRioMaySeries,
+  stationRioJunSeries,
+  stationRioAnnualSeries,
+];
+
 // ---------- Daily Delhi Climate dataset (subset) ----------
 // Columns: date, meantemp, humidity, wind_speed, meanpressure
 // Source: Public climate dataset (Delhi) - truncated sample
@@ -166,7 +397,7 @@ export const mockFolders: Folder[] = [
         isFavorite: true,
         periodLabel: 'Last 12 weeks',
         series: [
-          makeRichSeries('fc-1001-series', 'Series', 84, 100, 0.4, 3),
+          stationRioJanSeries,
         ],
       },
       {
@@ -175,9 +406,7 @@ export const mockFolders: Folder[] = [
         updatedAt: '2025-09-08T09:30:00Z',
         isFavorite: false,
         periodLabel: 'Last 12 months',
-        series: [
-          makeRichSeries('fc-1002-series', 'Series', 365, 60, 0.15, 2),
-        ],
+        series: [msftCloseSeries], // Microsoft Close
       },
     ],
   },
@@ -254,7 +483,7 @@ export const mockFolders: Folder[] = [
         isFavorite: false,
         periodLabel: 'Next 6 weeks',
         series: [
-          makeRichSeries('fc-2001-series', 'Series', 42, 0.2, 0.005, 0.05, 0),
+         stationRioFebSeries,
         ],
       },
       {
@@ -264,7 +493,7 @@ export const mockFolders: Folder[] = [
         isFavorite: true,
         periodLabel: 'Last 8 weeks',
         series: [
-          makeRichSeries('fc-2002-series', 'Series', 56, 120, -0.2, 2, 50),
+          stationRioMarSeries,
         ],
       },
     ],
@@ -279,9 +508,7 @@ export const mockFolders: Folder[] = [
         updatedAt: '2025-08-28T10:20:00Z',
         isFavorite: false,
         periodLabel: 'Last 90 days',
-        series: [
-          makeRichSeries('fc-3001-series', 'Series', 90, 5, 0.02, 1, 0),
-        ],
+        series: [d202UsageSeries], // D202 Usage
       },
       {
         id: 'fc-3002',
@@ -290,7 +517,7 @@ export const mockFolders: Folder[] = [
         isFavorite: true,
         periodLabel: 'Last 60 days',
         series: [
-          makeRichSeries('fc-3002-series', 'Series', 60, 0.08, 0.0006, 0.005, 0),
+          stationRioAprSeries,
         ],
       },
     ],
@@ -318,9 +545,7 @@ export const mockFolders: Folder[] = [
         updatedAt: new Date().toISOString(),
         isFavorite: true,
         periodLabel: 'Last 14 days',
-        series: [
-          makeRichSeries('fc-4002-series', 'Series', 14, 800, 5, 60, 500),
-        ],
+        series: [d202CostSeries], // D202 Cost (replacing MSFT Open per request)
       },
       {
         id: 'fc-4003',
@@ -329,9 +554,7 @@ export const mockFolders: Folder[] = [
         updatedAt: new Date().toISOString(),
         isFavorite: false,
         periodLabel: 'Last 14 days',
-        series: [
-          makeRichSeries('fc-4003-series', 'Series', 14, 60, 0.9, 2, 10),
-        ],
+        series: [msftVolumeSeries], // Microsoft Volume
       },
     ],
   },
