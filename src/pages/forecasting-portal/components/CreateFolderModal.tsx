@@ -43,6 +43,17 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ open, onClose, on
         </div>
 
         <div className="grid grid-cols-2 gap-4">
+                    <div className="min-h-[240px] border border-border rounded p-2 bg-card">
+            <div className="text-sm text-muted-foreground mb-2">Available</div>
+            <div className="space-y-1 max-h-[400px] overflow-auto">
+              {allForecasts.map((f) => (
+                <label key={f.id} className="flex items-center gap-2">
+                  <input type="checkbox" checked={selectedIds.includes(f.id)} onChange={() => toggleSelect(f.id)} />
+                  <span className="truncate" title={f.name}>{f.name}</span>
+                </label>
+              ))}
+            </div>
+          </div>
           <div className="min-h-[240px] border border-border rounded p-2 bg-card">
             <div className="text-sm text-muted-foreground mb-2">Selected</div>
             <div className="space-y-1">
@@ -56,17 +67,7 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ open, onClose, on
             </div>
           </div>
 
-          <div className="min-h-[240px] border border-border rounded p-2 bg-card">
-            <div className="text-sm text-muted-foreground mb-2">Available</div>
-            <div className="space-y-1 max-h-[400px] overflow-auto">
-              {allForecasts.map((f) => (
-                <label key={f.id} className="flex items-center gap-2">
-                  <input type="checkbox" checked={selectedIds.includes(f.id)} onChange={() => toggleSelect(f.id)} />
-                  <span className="truncate" title={f.name}>{f.name}</span>
-                </label>
-              ))}
-            </div>
-          </div>
+
         </div>
 
         <DialogFooter>

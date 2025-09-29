@@ -100,15 +100,15 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           const Icon = isOpen ? ChevronDown : ChevronRight;
           return (
             <div className="border-b border-border pb-2" key={favId}>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => toggleFolder(favId)}
-                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1"
+                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1 min-w-0 flex-1"
                 >
-                  <Icon className="h-4 w-4" />
-                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                  <span className="font-medium">Favorites</span>
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 shrink-0" />
+                  <span className="font-medium truncate" title="Favorites">Favorites</span>
                 </button>
                 {isOpen && favorites.length > 0 ? (
                   (() => {
@@ -167,14 +167,14 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           const Icon = isOpen ? ChevronDown : ChevronRight;
           return (
             <div key={folder.id} className="border-b border-border pb-2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => toggleFolder(folder.id)}
-                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1"
+                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1 min-w-0 flex-1"
                 >
-                  <Icon className="h-4 w-4" />
-                  <span className="font-medium">{folder.name}</span>
+                  <Icon className="h-4 w-4 shrink-0" />
+                  <span className="font-medium truncate" title={folder.name}>{folder.name}</span>
                 </button>
                 {isOpen && folder.forecasts.length > 0 ? (
                   (() => {
@@ -194,7 +194,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                           }
                           onSelectionChange(Array.from(set));
                         }}
-                        className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded"
+                        className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded shrink-0"
                         title={allSelected ? 'Unselect all items' : 'Select all items'}
                       >
                         {allSelected ? 'Unselect all' : 'Select all'}

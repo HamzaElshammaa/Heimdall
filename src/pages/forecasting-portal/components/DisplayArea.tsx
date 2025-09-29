@@ -71,10 +71,10 @@ const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds,
             <button
               type="button"
               onClick={() => toggleSection(favKey)}
-              className="flex items-center gap-2 mb-3 group"
+              className="flex items-center gap-2 mb-3 group min-w-0 overflow-hidden"
             >
-              <Icon className="h-4 w-4 text-foreground" />
-              <span className="text-lg font-semibold group-hover:underline">Favorite Forecasts</span>
+              <Icon className="h-4 w-4 text-foreground shrink-0" />
+              <span className="text-lg font-semibold group-hover:underline truncate flex-1 min-w-0" title="Favorite Forecasts">Favorite Forecasts</span>
             </button>
             {open && (
               <div className={`grid ${colsClass} gap-4`}>
@@ -97,10 +97,10 @@ const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds,
             <button
               type="button"
               onClick={() => toggleSection(folderId)}
-              className="flex items-center gap-2 mb-3 group"
+              className="flex items-center gap-2 mb-3 group min-w-0 overflow-hidden"
             >
-              <Icon className="h-4 w-4 text-foreground" />
-              <span className="text-lg font-semibold group-hover:underline">{folder.name}</span>
+              <Icon className="h-4 w-4 text-foreground shrink-0" />
+              <span className="text-lg font-semibold group-hover:underline truncate flex-1 min-w-0" title={folder.name}>{folder.name}</span>
             </button>
             {open && (
               <div className={`grid ${colsClass} gap-4`}>

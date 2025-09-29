@@ -13,8 +13,8 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, onToggleFavorite 
   return (
     <Card className="border border-border bg-sidebar">
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between">
-          <CardTitle className="text-lg font-semibold leading-tight">
+        <div className="flex items-start justify-between gap-2 min-w-0">
+          <CardTitle className="text-lg font-semibold leading-tight truncate min-w-0 flex-1" title={forecast.name}>
             {forecast.name}
           </CardTitle>
           <button
