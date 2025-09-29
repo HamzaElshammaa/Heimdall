@@ -33,9 +33,9 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ open, onClose, on
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[900px]">
+      <DialogContent className="sm:max-w-[900px] text-xs">
         <DialogHeader>
-          <DialogTitle>Create new group</DialogTitle>
+          <DialogTitle className="text-base">Create new group</DialogTitle>
         </DialogHeader>
 
         <div className="mb-3">
@@ -44,10 +44,10 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ open, onClose, on
 
         <div className="grid grid-cols-2 gap-4">
                     <div className="min-h-[240px] border border-border rounded p-2 bg-card">
-            <div className="text-sm text-muted-foreground mb-2">Available</div>
+            <div className="text-[11px] text-muted-foreground mb-2">Available</div>
             <div className="space-y-1 max-h-[400px] overflow-auto">
               {allForecasts.map((f) => (
-                <label key={f.id} className="flex items-center gap-2">
+                <label key={f.id} className="flex items-center gap-1 text-[11px]">
                   <input type="checkbox" checked={selectedIds.includes(f.id)} onChange={() => toggleSelect(f.id)} />
                   <span className="truncate" title={f.name}>{f.name}</span>
                 </label>
@@ -55,14 +55,14 @@ const CreateFolderModal: React.FC<CreateFolderModalProps> = ({ open, onClose, on
             </div>
           </div>
           <div className="min-h-[240px] border border-border rounded p-2 bg-card">
-            <div className="text-sm text-muted-foreground mb-2">Selected</div>
+            <div className="text-[11px] text-muted-foreground mb-2">Selected</div>
             <div className="space-y-1">
               {leftItems.length ? (
                 leftItems.map((f) => (
-                  <div key={f.id} className="text-sm p-1 rounded hover:bg-bg-card/30">{f.name}</div>
+                  <div key={f.id} className="text-[11px] p-1 rounded hover:bg-bg-card/30">{f.name}</div>
                 ))
               ) : (
-                <div className="text-sm text-muted-foreground">No items selected</div>
+                <div className="text-[11px] text-muted-foreground">No items selected</div>
               )}
             </div>
           </div>

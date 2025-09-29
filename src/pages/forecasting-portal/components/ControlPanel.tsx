@@ -72,21 +72,24 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     <>
       <style>{_scrollStyle}</style>
       <aside
-        className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md forecasting-control-scroll overflow-y-auto"
+        className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md forecasting-control-scroll overflow-y-auto text-xs"
         // hide scrollbars in Firefox and IE/Edge
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-      <div className="flex items-center gap-2">
-        <SearchInput
-        value={query}
-        onChange={(e) => setQuery(String((e.target as HTMLInputElement).value))}
-        placeholder="Search forecasts..."
-        className="text-foreground"
-        />
+      <div className="flex items-center gap-2 w-full">
+        <div className="flex-1 min-w-0">
+          <SearchInput
+            value={query}
+            onChange={(e) => setQuery(String((e.target as HTMLInputElement).value))}
+            placeholder="Search forecasts..."
+            className="w-full text-foreground"
+          />
+        </div>
         <button
           type="button"
           onClick={() => onCreateFolder && onCreateFolder()}
-          className="ml-2 inline-flex items-center gap-2 rounded-md border border-border bg-bg-card px-3 py-1 text-sm hover:bg-bg-card/80"
+          className="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-bg-card px-3 h-8 hover:bg-bg-card/80 text-[11px] ml-auto"
+          style={{lineHeight: '1'}}
         >
           New Group
         </button>
@@ -104,10 +107,10 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => toggleFolder(favId)}
-                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1 min-w-0 flex-1"
+                  className="flex items-center gap-1 py-0.5 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1 min-w-0 flex-1 text-[11px]"
                 >
-                  <Icon className="h-4 w-4 shrink-0" />
-                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400 shrink-0" />
+                  <Icon className="h-3.5 w-3.5 shrink-0" />
+                  <Star className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400 shrink-0" />
                   <span className="font-medium truncate" title="Favorites">Favorites</span>
                 </button>
                 {isOpen && favorites.length > 0 ? (
@@ -126,7 +129,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                           }
                           onSelectionChange(Array.from(set));
                         }}
-                        className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded"
+                        className="text-[10px] text-foreground/80 hover:text-foreground px-1.5 py-0.5 rounded"
                         title={allSelected ? 'Unselect all favorites' : 'Select all favorites'}
                       >
                         {allSelected ? 'Unselect all' : 'Select all'}
@@ -139,7 +142,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                 <div className="ml-6 mt-1">
                   {favorites.length ? (
                     favorites.map((f) => (
-                      <label key={f.id} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-bg-card/30 text-foreground">
+                      <label key={f.id} className="flex items-center gap-1 py-0.5 px-1 rounded hover:bg-bg-card/30 text-foreground text-[11px]">
                         <input
                           type="checkbox"
                           checked={selectedForecastIds.includes(f.id)}
@@ -152,7 +155,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                       </label>
                     ))
                   ) : (
-                    <div className="text-xs text-muted-foreground">No favorites</div>
+                    <div className="text-[10px] text-muted-foreground">No favorites</div>
                   )}
                 </div>
               )}
@@ -171,9 +174,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                 <button
                   type="button"
                   onClick={() => toggleFolder(folder.id)}
-                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1 min-w-0 flex-1"
+                  className="flex items-center gap-1 py-0.5 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1 min-w-0 flex-1 text-[11px]"
                 >
-                  <Icon className="h-4 w-4 shrink-0" />
+                  <Icon className="h-3.5 w-3.5 shrink-0" />
                   <span className="font-medium truncate" title={folder.name}>{folder.name}</span>
                 </button>
                 {isOpen && folder.forecasts.length > 0 ? (
@@ -194,7 +197,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                           }
                           onSelectionChange(Array.from(set));
                         }}
-                        className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded shrink-0"
+                        className="text-[10px] text-foreground/80 hover:text-foreground px-1.5 py-0.5 rounded shrink-0"
                         title={allSelected ? 'Unselect all items' : 'Select all items'}
                       >
                         {allSelected ? 'Unselect all' : 'Select all'}
@@ -207,7 +210,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                 <div className="ml-6 mt-1">
                   {folder.forecasts.length ? (
                     folder.forecasts.map((f) => (
-                      <label key={f.id} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-bg-card/30 text-foreground">
+                      <label key={f.id} className="flex items-center gap-1 py-0.5 px-1 rounded hover:bg-bg-card/30 text-foreground text-[11px]">
                         <input
                           type="checkbox"
                           checked={selectedForecastIds.includes(f.id)}
@@ -220,7 +223,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                       </label>
                     ))
                   ) : (
-                    <div className="text-xs text-muted-foreground">No forecasts</div>
+                    <div className="text-[10px] text-muted-foreground">No forecasts</div>
                   )}
                 </div>
               )}

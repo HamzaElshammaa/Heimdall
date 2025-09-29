@@ -14,7 +14,7 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, onToggleFavorite 
     <Card className="border border-border bg-sidebar">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-2 min-w-0">
-          <CardTitle className="text-lg font-semibold leading-tight truncate min-w-0 flex-1" title={forecast.name}>
+          <CardTitle className="text-base font-semibold leading-snug truncate min-w-0 flex-1" title={forecast.name}>
             {forecast.name}
           </CardTitle>
           <button
@@ -28,9 +28,9 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, onToggleFavorite 
           </button>
         </div>
         {forecast.description ? (
-          <p className="mt-1 text-sm text-muted-foreground">{forecast.description}</p>
+          <p className="mt-1 text-xs text-muted-foreground">{forecast.description}</p>
         ) : null}
-        <div className="mt-1 text-xs text-muted-foreground">
+        <div className="mt-1 text-[10px] text-muted-foreground">
           {forecast.periodLabel ?? `Updated ${new Date(forecast.updatedAt).toLocaleString()}`}
         </div>
       </CardHeader>
