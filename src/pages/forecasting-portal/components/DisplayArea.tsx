@@ -1,6 +1,7 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useCallback } from 'react';
 import type { Folder, Forecast } from '../data';
 import ForecastCard from './ForecastCard';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 
 export type DisplayAreaProps = {
   folders: Folder[];
@@ -30,11 +31,13 @@ const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds,
     return Array.from(assigned.values()).map(({ forecast, folderId }) => ({ ...forecast, _folderId: folderId } as Forecast & { _folderId: string }));
   }, [folders, selectedForecastIds]);
 
-  if (!selectedForecasts.length) {
-    return (
-      <div className="min-h-0 text-sm text-muted-foreground">Select forecasts from the left panel to display them here.</div>
-    );
-  }
+  // collapse state: store favorites under key '__favorites__' and folder ids.
+  // Hooks must be declared unconditionally (before any return) to preserve order across renders.
+  const [openSections, setOpenSections] = useState<Record<string, boolean>>({});
+  const isSectionOpen = useCallback((id: string, defaultOpen = true) => {
+    return openSections[id] ?? defaultOpen;
+  }, [openSections]);
+  const toggleSection = (id: string) => setOpenSections((prev) => ({ ...prev, [id]: !(prev[id] ?? true) }));
 
   // favorites first (only those that are selected)
   const favoritesSelected = selectedForecasts.filter((s) => s.isFavorite);
@@ -51,30 +54,61 @@ const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds,
 
   const colsClass = viewMode === 'expanded' ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2';
 
+  if (!selectedForecasts.length) {
+    return (
+      <div className="min-h-0 text-sm text-muted-foreground">Select forecasts from the left panel to display them here.</div>
+    );
+  }
+
   return (
     <div className="min-h-0 space-y-6">
-      {favoritesSelected.length > 0 && (
-        <section>
-          <h3 className="text-lg font-semibold mb-3">Favorite Forecasts</h3>
-          <div className={`grid ${colsClass} gap-4`}>
-            {favoritesSelected.map((f) => (
-              <ForecastCard key={f.id} forecast={f} onToggleFavorite={onToggleFavorite} />
-            ))}
-          </div>
-        </section>
-      )}
+      {favoritesSelected.length > 0 && (() => {
+        const favKey = '__favorites__';
+        const open = isSectionOpen(favKey);
+        const Icon = open ? ChevronDown : ChevronRight;
+        return (
+          <section key={favKey} className="pt-2 first:pt-0 border-t border-border first:border-t-0">
+            <button
+              type="button"
+              onClick={() => toggleSection(favKey)}
+              className="flex items-center gap-2 mb-3 group"
+            >
+              <Icon className="h-4 w-4 text-foreground" />
+              <span className="text-lg font-semibold group-hover:underline">Favorite Forecasts</span>
+            </button>
+            {open && (
+              <div className={`grid ${colsClass} gap-4`}>
+                {favoritesSelected.map((f) => (
+                  <ForecastCard key={f.id} forecast={f} onToggleFavorite={onToggleFavorite} />
+                ))}
+              </div>
+            )}
+          </section>
+        );
+      })()}
 
       {[...folderMap.entries()].map(([folderId, items]) => {
         const folder = folders.find((f) => f.id === folderId);
         if (!folder) return null;
+        const open = isSectionOpen(folderId);
+        const Icon = open ? ChevronDown : ChevronRight;
         return (
-          <section key={folderId}>
-            <h3 className="text-lg font-semibold mb-3">{folder.name}</h3>
-            <div className={`grid ${colsClass} gap-4`}>
-              {items.map((f) => (
-                <ForecastCard key={f.id} forecast={f} onToggleFavorite={onToggleFavorite} />
-              ))}
-            </div>
+          <section key={folderId} className="pt-2 border-t border-border">
+            <button
+              type="button"
+              onClick={() => toggleSection(folderId)}
+              className="flex items-center gap-2 mb-3 group"
+            >
+              <Icon className="h-4 w-4 text-foreground" />
+              <span className="text-lg font-semibold group-hover:underline">{folder.name}</span>
+            </button>
+            {open && (
+              <div className={`grid ${colsClass} gap-4`}>
+                {items.map((f) => (
+                  <ForecastCard key={f.id} forecast={f} onToggleFavorite={onToggleFavorite} />
+                ))}
+              </div>
+            )}
           </section>
         );
       })}

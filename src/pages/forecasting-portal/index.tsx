@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import './font.less';
 import { mockFolders, type Folder } from './data';
 import ControlPanel from './components/ControlPanel';
 import CreateFolderModal from './components/CreateFolderModal';
@@ -17,7 +18,7 @@ const ForecastingPortal: React.FC = () => {
 
   return (
     // make the page fill the viewport so internal columns can scroll independently
-    <div className="p-6 h-screen flex flex-col min-h-0">
+  <div className="p-6 h-screen flex flex-col min-h-0 font-forecasting-portal">
       <header className="flex items-start justify-between">
         <div>
         </div>

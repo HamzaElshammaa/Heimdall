@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import type { Folder, Forecast } from '../data';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Star } from 'lucide-react';
 import { SearchInput } from '@/components/ui/input';
 
 export type ControlPanelProps = {
@@ -107,6 +107,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                   className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1"
                 >
                   <Icon className="h-4 w-4" />
+                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                   <span className="font-medium">Favorites</span>
                 </button>
                 {isOpen && favorites.length > 0 ? (
