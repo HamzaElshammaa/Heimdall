@@ -105,7 +105,7 @@ export function Header() {
     margin-top: 1rem; */}
 
         {isForecasting ? (
-          <span style={{ color: 'white', fontSize: 18, fontWeight: 600, height: '1.8rem', width: 'auto', objectFit: 'contain', margin: '0.75rem -1rem', marginTop: '1.2rem' }} >Forecaster</span>
+          <span style={{ color: 'white', fontSize: 14, fontWeight: 600, height: '1.8rem', width: 'auto', objectFit: 'contain', margin: '0.75rem -1rem', marginTop: '1.2rem' }} >Capacity Management</span>
         ) : null}
       </div>
   {/* Top navigation moved into hamburger menu next to avatar */}

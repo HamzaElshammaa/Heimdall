@@ -28,19 +28,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     return favs.filter((x) => x.name.toLowerCase().includes(normalizedQuery));
   }, [folders, normalizedQuery]);
 
-  const toggleFavoritesSelection = () => {
-    const favIds = favorites.map((f) => f.id);
-    const favSet = new Set(favIds);
-    const allSelected = favIds.length > 0 && favIds.every((id) => selectedForecastIds.includes(id));
-    if (allSelected) {
-      // unselect all favorites
-      onSelectionChange(selectedForecastIds.filter((id) => !favSet.has(id)));
-    } else {
-      // select all favorites
-      onSelectionChange(Array.from(new Set([...selectedForecastIds, ...favIds])));
-    }
-  };
-
   const filteredFolders = useMemo(() => {
     if (!normalizedQuery) return folders;
     return folders
@@ -105,32 +92,75 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         </button>
       </div>
 
-      <div>
-        <div className="flex items-center justify-between">
-          <div className="text-xs font-medium text-muted-foreground mb-1">Favorites</div>
-          {favorites.length > 0 && (() => {
-            const favIds = favorites.map((f) => f.id);
-            const allSelected = favIds.length > 0 && favIds.every((id) => selectedForecastIds.includes(id));
-            return (
-              <button
-                type="button"
-                onClick={toggleFavoritesSelection}
-                className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded"
-                title={allSelected ? 'Unselect all favorites' : 'Select all favorites'}
-              >
-                {allSelected ? 'Unselect all' : 'Select all'}
-              </button>
-            );
-          })()}
-        </div>
-        <div className="pl-1">
-          {favorites.length ? favorites.map(renderForecastRow) : (
-            <div className="text-xs text-muted-foreground">No favorites</div>
-          )}
-        </div>
+      {/* Favorites as a normal folder */}
+      <div className="mt-1 space-y-1">
+        {(() => {
+          const favId = '__favorites__';
+          const isOpen = openFolders[favId] ?? true; // default open
+          const Icon = isOpen ? ChevronDown : ChevronRight;
+          return (
+            <div className="border-b border-border pb-2" key={favId}>
+              <div className="flex items-center justify-between">
+                <button
+                  type="button"
+                  onClick={() => toggleFolder(favId)}
+                  className="flex items-center gap-2 py-1 text-left text-foreground hover:bg-bg-card/40 rounded-md px-1"
+                >
+                  <Icon className="h-4 w-4" />
+                  <span className="font-medium">Favorites</span>
+                </button>
+                {isOpen && favorites.length > 0 ? (
+                  (() => {
+                    const favIds = favorites.map((f) => f.id);
+                    const allSelected = favIds.length > 0 && favIds.every((id) => selectedForecastIds.includes(id));
+                    return (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const set = new Set(selectedForecastIds);
+                          if (allSelected) {
+                            for (const id of favIds) set.delete(id);
+                          } else {
+                            for (const id of favIds) set.add(id);
+                          }
+                          onSelectionChange(Array.from(set));
+                        }}
+                        className="text-xs text-foreground/80 hover:text-foreground px-2 py-0.5 rounded"
+                        title={allSelected ? 'Unselect all favorites' : 'Select all favorites'}
+                      >
+                        {allSelected ? 'Unselect all' : 'Select all'}
+                      </button>
+                    );
+                  })()
+                ) : null}
+              </div>
+              {isOpen && (
+                <div className="ml-6 mt-1">
+                  {favorites.length ? (
+                    favorites.map((f) => (
+                      <label key={f.id} className="flex items-center gap-2 py-1 px-1 rounded hover:bg-bg-card/30 text-foreground">
+                        <input
+                          type="checkbox"
+                          checked={selectedForecastIds.includes(f.id)}
+                          onChange={() => toggleSelection(f.id)}
+                          className="accent-blue-600"
+                        />
+                        <span className="truncate" title={f.name}>
+                          {f.name}
+                        </span>
+                      </label>
+                    ))
+                  ) : (
+                    <div className="text-xs text-muted-foreground">No favorites</div>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })()}
       </div>
 
-      <div className="mt-2 space-y-1">
+  <div className="mt-2 space-y-1">
         {filteredFolders.map((folder) => {
           const isOpen = !!openFolders[folder.id];
           const Icon = isOpen ? ChevronDown : ChevronRight;
