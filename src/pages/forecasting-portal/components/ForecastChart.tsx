@@ -39,6 +39,25 @@ function mergeSeries(series: Series[]) {
   return Array.from(map.values()).sort((a, b) => (a.t > b.t ? 1 : -1));
 }
 
+// Tooltip component that hides band payload entries
+const BandTooltip: React.FC<any> = ({ active, label, payload }) => {
+  if (!active || !payload) return null;
+  const filtered = payload.filter((p: any) => !(typeof p.dataKey === 'string' && p.dataKey.endsWith('_band')));
+  if (!filtered.length) return null;
+  return (
+    <div className="recharts-default-tooltip text-xs bg-white/90 backdrop-blur rounded border border-border px-2 py-1">
+      <div className="font-semibold mb-1">
+        {label && typeof label === 'string' ? new Date(label).toLocaleString() : label}
+      </div>
+      {filtered.map((p: any) => (
+        <div key={p.dataKey} style={{ color: p.color }}>
+          {p.name}: <span className="font-medium">{p.value}</span>
+        </div>
+      ))}
+    </div>
+  );
+};
+
 const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, showTooltip = false }) => {
   // merged timeline rows (one row per timestamp)
   const baseData = useMemo(() => mergeSeries(forecast.series), [forecast.series]);
@@ -51,6 +70,10 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
       const out: Record<string, any> = { ...row };
       for (const s of forecast.series) {
         const raw = row[s.id] ?? null;
+        // variable band width: narrower for observed (actual) region, wider for forecast region
+        const pctObserved = 0.06; // ±6%
+        const pctForecast = 0.18; // ±18%
+        const bandPct = idx <= cutoff ? pctObserved : pctForecast;
         if (idx < cutoff) {
           out[`${s.id}_actual`] = raw;
           out[`${s.id}_pred`] = null;
@@ -61,6 +84,13 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
         } else {
           out[`${s.id}_actual`] = null;
           out[`${s.id}_pred`] = raw;
+        }
+        if (raw != null) {
+          const low = Number((raw * (1 - bandPct)).toFixed(2));
+          const high = Number((raw * (1 + bandPct)).toFixed(2));
+          out[`${s.id}_band`] = [low, high];
+        } else {
+          out[`${s.id}_band`] = null;
         }
         // remove the original key to avoid duplicate plotting
         delete out[s.id];
@@ -82,10 +112,7 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
             tickLine={{ stroke: AXIS }}
           />
           <YAxis hide domain={["auto", "auto"]} />
-          <Tooltip
-            labelFormatter={(v) => new Date(v as string).toLocaleString()}
-            contentStyle={{ fontSize: 12 }}
-          />
+          <Tooltip content={<BandTooltip />} wrapperStyle={{ outline: 'none' }} />
           {forecast.series.map((s) => {
             const lname = s.name.toLowerCase();
             const color = lname.includes('forecast') ? BLUE_LIGHT : BLUE;
@@ -94,6 +121,17 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
               // render area as filled actual + dotted prediction (prediction as line only)
               return (
                 <React.Fragment key={s.id}>
+                  <Area
+                    type="monotone"
+                    dataKey={`${s.id}_band`}
+                    stroke="none"
+                    fill="#cccccc"
+                    fillOpacity={0.5}
+                    connectNulls
+                    dot={false}
+                    activeDot={false}
+                    isAnimationActive={false}
+                  />
                   <Area
                     type="monotone"
                     dataKey={`${s.id}_actual`}
@@ -119,6 +157,17 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
             // default: line (and previously bar) series -> split into actual (solid) and prediction (dotted)
             return (
               <React.Fragment key={s.id}>
+                <Area
+                  type="monotone"
+                  dataKey={`${s.id}_band`}
+                  stroke="none"
+                  fill="#cccccc"
+                  fillOpacity={0.5}
+                  connectNulls
+                  dot={false}
+                  activeDot={false}
+                  isAnimationActive={false}
+                />
                 <Line
                   type="monotone"
                   dataKey={`${s.id}_actual`}
