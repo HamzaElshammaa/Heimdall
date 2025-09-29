@@ -8,7 +8,12 @@ import { LayoutGrid, Maximize2 } from 'lucide-react';
 
 const ForecastingPortal: React.FC = () => {
   const [folders, setFolders] = useState<Folder[]>(mockFolders);
-  const [selectedForecastIds, setSelectedForecastIds] = useState<string[]>([]);
+  // Default select all favorites on initial render
+  const initialFavoriteIds = React.useMemo(
+    () => mockFolders.flatMap(f => f.forecasts.filter(fc => fc.isFavorite).map(fc => fc.id)),
+    []
+  );
+  const [selectedForecastIds, setSelectedForecastIds] = useState<string[]>(initialFavoriteIds);
   const [viewMode, setViewMode] = useState<'compact' | 'expanded'>('compact');
   const [creatingFolder, setCreatingFolder] = useState(false);
 
