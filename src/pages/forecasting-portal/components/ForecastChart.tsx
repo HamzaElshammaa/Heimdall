@@ -107,7 +107,7 @@ const ForecastChart: React.FC<ForecastChartProps> = ({ forecast, height = 140, s
           <XAxis
             dataKey="t"
             tickFormatter={(v) => new Date(v).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
-            tick={{ fill: AXIS, fontSize: 11 }}
+            tick={{ fill: AXIS, fontSize: 8 }}
             axisLine={{ stroke: AXIS }}
             tickLine={{ stroke: AXIS }}
           />
