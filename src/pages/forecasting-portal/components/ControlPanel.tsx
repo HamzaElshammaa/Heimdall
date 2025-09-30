@@ -1,22 +1,21 @@
 import React, { useMemo, useState } from 'react';
 import type { Folder, Forecast } from '../data';
 import { ChevronDown, ChevronRight, Star } from 'lucide-react';
-import { SearchInput } from '@/components/ui/input';
 
 export type ControlPanelProps = {
   folders: Folder[];
   selectedForecastIds: string[];
   onSelectionChange: (ids: string[]) => void;
-  onCreateFolder?: () => void;
+  /** current search query provided by parent toolbar */
+  query: string;
 };
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
   folders,
   selectedForecastIds,
   onSelectionChange,
-  onCreateFolder,
+  query,
 }) => {
-  const [query, setQuery] = useState('');
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
 
   const normalizedQuery = query.trim().toLowerCase();
@@ -73,27 +72,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       <style>{_scrollStyle}</style>
       <aside
         className="h-full flex flex-col gap-3 bg-sidebar p-3 rounded-md forecasting-control-scroll overflow-y-auto text-xs"
-        // hide scrollbars in Firefox and IE/Edge
         style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
       >
-      <div className="flex items-center gap-2 w-full">
-        <div className="flex-1 min-w-0">
-          <SearchInput
-            value={query}
-            onChange={(e) => setQuery(String((e.target as HTMLInputElement).value))}
-            placeholder="Search forecasts..."
-            className="w-full text-foreground"
-          />
-        </div>
-        <button
-          type="button"
-          onClick={() => onCreateFolder && onCreateFolder()}
-          className="inline-flex items-center justify-center gap-2 rounded-md border border-border bg-bg-card px-3 h-8 hover:bg-bg-card/80 text-[11px] ml-auto"
-          style={{lineHeight: '1'}}
-        >
-          New Group
-        </button>
-      </div>
 
       {/* Favorites as a normal folder */}
       <div className="mt-1 space-y-1">

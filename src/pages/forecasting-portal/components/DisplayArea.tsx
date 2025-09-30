@@ -67,20 +67,29 @@ const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds,
         const open = isSectionOpen(favKey);
         const Icon = open ? ChevronDown : ChevronRight;
         return (
-          <section key={favKey} className="pt-2 first:pt-0 border-t border-border first:border-t-0">
+          <section key={favKey} className="pt-2 first:pt-0">
             <button
               type="button"
+              aria-expanded={open}
               onClick={() => toggleSection(favKey)}
-              className="flex items-center gap-2 mb-3 group min-w-0 overflow-hidden"
+              className={`w-full flex items-center gap-2 mb-2 group min-w-0 overflow-hidden rounded-md border border-border px-3 py-2 transition-colors text-left ${open ? 'bg-transparent' : 'bg-bg-card hover:bg-bg-card/80'}`}
             >
-              <Icon className="h-3.5 w-3.5 text-foreground shrink-0" />
-              <span className="text-base font-semibold group-hover:underline truncate flex-1 min-w-0" title="Favorite Forecasts">Favorite Forecasts</span>
+              <Icon className="h-3.5 w-3.5 text-foreground shrink-0 transition-transform" />
+              <span className="text-xs font-semibold group-hover:underline truncate flex-1 min-w-0" title="Favorite Forecasts">Favorite Forecasts</span>
+              <span className="text-xs opacity-70">{open ? '−' : '+'}</span>
             </button>
             {open && (
-              <div className={`grid ${colsClass} gap-4`}>
-                {favoritesSelected.map((f) => (
-                  <ForecastCard key={f.id} forecast={f} onToggleFavorite={onToggleFavorite} />
-                ))}
+              <div className="relative pl-6">
+                {/* vertical connector line */}
+                <div className="absolute left-2 top-0 bottom-0 w-px bg-border/60 pointer-events-none" />
+                <div className={`grid ${colsClass} gap-4 pl-2`}>
+                  {favoritesSelected.map((f) => (
+                    <div key={f.id} className="relative">
+                      <div className="absolute -left-4 top-1/2 w-4 h-px bg-border/60" />
+                      <ForecastCard forecast={f} onToggleFavorite={onToggleFavorite} />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </section>
@@ -93,20 +102,28 @@ const DisplayArea: React.FC<DisplayAreaProps> = ({ folders, selectedForecastIds,
         const open = isSectionOpen(folderId);
         const Icon = open ? ChevronDown : ChevronRight;
         return (
-          <section key={folderId} className="pt-2 border-t border-border">
+          <section key={folderId} className="pt-2">
             <button
               type="button"
+              aria-expanded={open}
               onClick={() => toggleSection(folderId)}
-              className="flex items-center gap-2 mb-3 group min-w-0 overflow-hidden"
+              className={`w-full flex items-center gap-2 mb-2 group min-w-0 overflow-hidden rounded-md border border-border px-3 py-2 transition-colors text-left ${open ? 'bg-transparent' : 'bg-bg-card hover:bg-bg-card/80'}`}
             >
               <Icon className="h-3.5 w-3.5 text-foreground shrink-0" />
-              <span className="text-base font-semibold group-hover:underline truncate flex-1 min-w-0" title={folder.name}>{folder.name}</span>
+              <span className="text-xs font-semibold group-hover:underline truncate flex-1 min-w-0" title={folder.name}>{folder.name}</span>
+              <span className="text-xs opacity-70">{open ? '−' : '+'}</span>
             </button>
             {open && (
-              <div className={`grid ${colsClass} gap-4`}>
-                {items.map((f) => (
-                  <ForecastCard key={f.id} forecast={f} onToggleFavorite={onToggleFavorite} />
-                ))}
+              <div className="relative pl-6">
+                <div className="absolute left-2 top-0 bottom-0 w-px bg-border/60 pointer-events-none" />
+                <div className={`grid ${colsClass} gap-4 pl-2`}>
+                  {items.map((f) => (
+                    <div key={f.id} className="relative">
+                      <div className="absolute -left-4 top-1/2 w-4 h-px bg-border/60" />
+                      <ForecastCard forecast={f} onToggleFavorite={onToggleFavorite} />
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </section>
