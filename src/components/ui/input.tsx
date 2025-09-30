@@ -55,36 +55,29 @@ const ExpandedInput = ({
   className,
   ...props
 }: ExpandedInputProps) => {
+  const paddingClasses = [suffix && 'pr-8', prefix && 'pl-9']
+    .filter(Boolean)
+    .join(' ');
   return (
     <div className="relative">
-      <span
-        className={cn({
-          ['absolute left-3 top-[50%] translate-y-[-50%]']: prefix,
-        })}
-      >
-        {prefix}
-      </span>
-      <Input
-        className={cn({ 'pr-8': !!suffix, 'pl-8': !!prefix }, className)}
-        {...props}
-      ></Input>
-      <span
-        className={cn({
-          ['absolute right-3 top-[50%] translate-y-[-50%]']: suffix,
-        })}
-      >
-        {suffix}
-      </span>
+      {prefix && (
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+          {prefix}
+        </span>
+      )}
+      <Input className={cn(className, paddingClasses)} {...props} />
+      {suffix && (
+        <span className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-muted-foreground">
+          {suffix}
+        </span>
+      )}
     </div>
   );
 };
 
 const SearchInput = (props: InputProps) => {
   return (
-    <ExpandedInput
-      prefix={<Search className="size-3.5" />}
-      {...props}
-    ></ExpandedInput>
+    <ExpandedInput prefix={<Search className="h-4 w-4" />} {...props} />
   );
 };
 
@@ -124,9 +117,7 @@ export const InnerBlurInput = React.forwardRef<
   );
 });
 
-if (process.env.NODE_ENV !== 'production') {
-  InnerBlurInput.whyDidYouRender = true;
-}
+// Dev-only whyDidYouRender flag removed (typing not defined) to avoid TS error.
 
 export const BlurInput = React.memo(InnerBlurInput);
 

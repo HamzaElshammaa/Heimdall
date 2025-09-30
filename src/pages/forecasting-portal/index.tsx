@@ -37,7 +37,7 @@ const ForecastingPortal: React.FC = () => {
               setQuery(String((e.target as HTMLInputElement).value))
             }
             placeholder="Search forecasts..."
-            className="w-full text-foreground text-[11px] h-8 rounded-md border border-border bg-bg-card px-3 focus:outline-none focus:ring-0"
+            className="flex-grow max-w-[520px] w-full text-foreground text-[11px] h-8 rounded-md border border-border bg-bg-card px-3 focus:outline-none focus:ring-0"
           />
           <button
             type="button"

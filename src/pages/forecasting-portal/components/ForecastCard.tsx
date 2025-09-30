@@ -21,7 +21,7 @@ const ForecastCard: React.FC<ForecastCardProps> = ({ forecast, onToggleFavorite 
             type="button"
             aria-label={forecast.isFavorite ? 'Unfavorite' : 'Favorite'}
             onClick={() => onToggleFavorite?.(forecast.id)}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md hover:bg-bg-card/50 text-yellow-500 hover:text-yellow-600"
+            className="inline-flex h-4 w-4 items-center justify-center rounded-md hover:bg-bg-card/50 text-yellow-500 hover:text-yellow-600"
             title={forecast.isFavorite ? 'Unfavorite' : 'Favorite'}
           >
             <Star className={forecast.isFavorite ? 'fill-yellow-500' : ''} />
