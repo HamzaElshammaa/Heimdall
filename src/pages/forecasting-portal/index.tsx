@@ -3,6 +3,8 @@ import './font.less';
 import { mockFolders, type Folder } from './data';
 import ControlPanel from './components/ControlPanel';
 import CreateFolderModal from './components/CreateFolderModal';
+import EditFolderModal from './components/EditFolderModal';
+import ConfirmDeleteDialog from './components/ConfirmDeleteDialog';
 import DisplayArea from './components/DisplayArea';
 import { LayoutGrid, Maximize2, Filter, User, Clock } from 'lucide-react';
 import { SearchInput } from '@/components/ui/input';
@@ -21,7 +23,22 @@ const ForecastingPortal: React.FC = () => {
   );
   const [viewMode, setViewMode] = useState<'compact' | 'expanded'>('compact');
   const [creatingFolder, setCreatingFolder] = useState(false);
+  const [editingFolder, setEditingFolder] = useState<Folder | null>(null);
+  const [deletingFolder, setDeletingFolder] = useState<Folder | null>(null);
   const [query, setQuery] = useState('');
+
+  // Get unique forecasts across all folders (deduplicated by ID)
+  const allUniqueForecasts = React.useMemo(() => {
+    const forecastMap = new Map();
+    folders.forEach((folder) => {
+      folder.forecasts.forEach((forecast) => {
+        if (!forecastMap.has(forecast.id)) {
+          forecastMap.set(forecast.id, forecast);
+        }
+      });
+    });
+    return Array.from(forecastMap.values());
+  }, [folders]);
 
   const toggleView = useCallback(() => {
     setViewMode((v) => (v === 'compact' ? 'expanded' : 'compact'));
@@ -104,6 +121,8 @@ const ForecastingPortal: React.FC = () => {
             selectedForecastIds={selectedForecastIds}
             onSelectionChange={setSelectedForecastIds}
             query={query}
+            onEditFolder={(folder) => setEditingFolder(folder)}
+            onDeleteFolder={(folder) => setDeletingFolder(folder)}
           />
         </div>
         <div className="col-span-12 md:col-span-8 xl:col-span-9 min-h-0">
@@ -130,9 +149,43 @@ const ForecastingPortal: React.FC = () => {
       </div>
       <CreateFolderModal
         open={creatingFolder}
-        allForecasts={folders.flatMap((f) => f.forecasts)}
+        allForecasts={allUniqueForecasts}
         onClose={() => setCreatingFolder(false)}
         onSave={(newFolder) => setFolders((prev) => [...prev, newFolder])}
+      />
+      <EditFolderModal
+        open={editingFolder !== null}
+        folder={editingFolder}
+        allForecasts={allUniqueForecasts}
+        onClose={() => setEditingFolder(null)}
+        onSave={(folderId, updatedForecasts) => {
+          setFolders((prev) =>
+            prev.map((folder) =>
+              folder.id === folderId
+                ? { ...folder, forecasts: updatedForecasts }
+                : folder
+            )
+          );
+          setEditingFolder(null);
+        }}
+      />
+      <ConfirmDeleteDialog
+        open={deletingFolder !== null}
+        groupName={deletingFolder?.name || ''}
+        onClose={() => setDeletingFolder(null)}
+        onConfirm={() => {
+          if (deletingFolder) {
+            setFolders((prev) => prev.filter((f) => f.id !== deletingFolder.id));
+            // Remove deleted folder's forecasts from selection if they're not in other folders
+            const remainingForecastIds = folders
+              .filter((f) => f.id !== deletingFolder.id)
+              .flatMap((f) => f.forecasts.map((fc) => fc.id));
+            setSelectedForecastIds((prev) =>
+              prev.filter((id) => remainingForecastIds.includes(id))
+            );
+            setDeletingFolder(null);
+          }
+        }}
       />
     </div>
   );

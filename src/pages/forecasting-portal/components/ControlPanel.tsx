@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import type { Folder, Forecast } from '../data';
-import { ChevronDown, ChevronRight, Star } from 'lucide-react';
+import { ChevronDown, ChevronRight, Star, Pencil, Trash2 } from 'lucide-react';
 
 export type ControlPanelProps = {
   folders: Folder[];
@@ -8,6 +8,10 @@ export type ControlPanelProps = {
   onSelectionChange: (ids: string[]) => void;
   /** current search query provided by parent toolbar */
   query: string;
+  /** callback when user clicks edit on a folder */
+  onEditFolder?: (folder: Folder) => void;
+  /** callback when user clicks delete on a folder */
+  onDeleteFolder?: (folder: Folder) => void;
 };
 
 const ControlPanel: React.FC<ControlPanelProps> = ({
@@ -15,6 +19,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   selectedForecastIds,
   onSelectionChange,
   query,
+  onEditFolder,
+  onDeleteFolder,
 }) => {
   const [openFolders, setOpenFolders] = useState<Record<string, boolean>>({});
 
@@ -148,6 +154,10 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         {filteredFolders.map((folder) => {
           const isOpen = !!openFolders[folder.id];
           const Icon = isOpen ? ChevronDown : ChevronRight;
+          // User-created folders have timestamp-based IDs (e.g., fld-1730419200000)
+          // Pre-existing folders have simple IDs (e.g., fld-001)
+          const isUserCreated = folder.id.startsWith('fld-') && folder.id.split('-')[1]?.length > 10;
+          
           return (
             <div key={folder.id} className="border-b border-border pb-2">
               <div className="flex items-center gap-2">
@@ -159,32 +169,54 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                   <Icon className="h-3.5 w-3.5 shrink-0" />
                   <span className="font-medium truncate" title={folder.name}>{folder.name}</span>
                 </button>
-                {isOpen && folder.forecasts.length > 0 ? (
-                  (() => {
-                    const folderIds = folder.forecasts.map((f) => f.id);
-                    const allSelected = folderIds.every((id) => selectedForecastIds.includes(id));
-                    return (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const set = new Set(selectedForecastIds);
-                          if (allSelected) {
-                            // unselect all in this folder
-                            for (const id of folderIds) set.delete(id);
-                          } else {
-                            // select all in this folder
-                            for (const id of folderIds) set.add(id);
-                          }
-                          onSelectionChange(Array.from(set));
-                        }}
-                        className="text-[10px] text-foreground/80 hover:text-foreground px-1.5 py-0.5 rounded shrink-0"
-                        title={allSelected ? 'Unselect all items' : 'Select all items'}
-                      >
-                        {allSelected ? 'Unselect all' : 'Select all'}
-                      </button>
-                    );
-                  })()
-                ) : null}
+                <div className="flex items-center gap-1 shrink-0">
+                  {onEditFolder && isUserCreated && (
+                    <button
+                      type="button"
+                      onClick={() => onEditFolder(folder)}
+                      className="text-foreground/60 hover:text-foreground p-1 rounded hover:bg-bg-card/40"
+                      title="Edit group"
+                    >
+                      <Pencil className="h-3 w-3" />
+                    </button>
+                  )}
+                  {onDeleteFolder && isUserCreated && (
+                    <button
+                      type="button"
+                      onClick={() => onDeleteFolder(folder)}
+                      className="text-foreground/60 hover:text-red-500 p-1 rounded hover:bg-bg-card/40"
+                      title="Delete group"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
+                  )}
+                  {isOpen && folder.forecasts.length > 0 ? (
+                    (() => {
+                      const folderIds = folder.forecasts.map((f) => f.id);
+                      const allSelected = folderIds.every((id) => selectedForecastIds.includes(id));
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const set = new Set(selectedForecastIds);
+                            if (allSelected) {
+                              // unselect all in this folder
+                              for (const id of folderIds) set.delete(id);
+                            } else {
+                              // select all in this folder
+                              for (const id of folderIds) set.add(id);
+                            }
+                            onSelectionChange(Array.from(set));
+                          }}
+                          className="text-[10px] text-foreground/80 hover:text-foreground px-1.5 py-0.5 rounded shrink-0"
+                          title={allSelected ? 'Unselect all items' : 'Select all items'}
+                        >
+                          {allSelected ? 'Unselect all' : 'Select all'}
+                        </button>
+                      );
+                    })()
+                  ) : null}
+                </div>
               </div>
               {isOpen && (
                 <div className="ml-6 mt-1">
