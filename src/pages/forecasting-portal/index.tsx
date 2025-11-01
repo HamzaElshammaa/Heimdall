@@ -32,6 +32,7 @@ const ForecastingPortal: React.FC = () => {
       <header className="flex items-center gap-3">
         <div className="flex-1 flex items-center gap-3 min-w-0">
           <SearchInput
+            style={{ width: '258px' }}
             value={query}
             onChange={(e) =>
               setQuery(String((e.target as HTMLInputElement).value))
